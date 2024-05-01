@@ -1,9 +1,4 @@
-from edda import Edda
+from db import profiles_db
 
-edda = Edda()
-res = edda.check_in_edda_by_name("oceanai")
-if not res == None:
-    edda_link = edda.get_edda_link("oceanai")
-    print(edda_link)
-else:
-    print("Not found")
+db = profiles_db()
+print(db.fetch_names())

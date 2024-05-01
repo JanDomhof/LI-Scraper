@@ -6,7 +6,7 @@ class profiles_db:
         self.mysql = sql.connect(database="graduate_db", user=os.environ["DB_USERNAME"],
                                     password=os.environ["DB_PASSWORD"],
                                     host="graduateentrepreneurserver.mysql.database.azure.com", port=3306,
-                                    ssl={'ca': '/Users/jandomhof/Documents/DigiCertGlobalRootCA.crt.pem'})
+                                    ssl={'ca': os.environ["SSL_LOCATION"]})
 
         # create cursor
         self.cursor = self.mysql.cursor()

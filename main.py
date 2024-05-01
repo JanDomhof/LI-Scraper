@@ -8,7 +8,7 @@ STEP 0: Initialize driver
 """
 options = uc.ChromeOptions()
 options.headless = False
-driver = uc.Chrome(options=options,version_main=122)
+driver = uc.Chrome(options=options,version_main=124)
 pre_seed = False
 
 """

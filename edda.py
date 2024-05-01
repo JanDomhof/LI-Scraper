@@ -69,4 +69,4 @@ class Edda:
 
     def get_edda_link(self, name):
         json = self.check_in_edda_by_name(name)
-        return f"https://eu-dealflow.edda.co/864/{json["pipeline"]["id"]}/company/{json["id"]}"
+        return f'https://eu-dealflow.edda.co/864/{json["pipeline"]["id"]}/company/{json["id"]}'
