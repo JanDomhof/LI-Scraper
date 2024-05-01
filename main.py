@@ -1,9 +1,7 @@
 """This file will run to execute all the logics and ands"""
 import undetected_chromedriver as uc
-import time
-
-from db import profiles_db
 from page import LoginPage, TUPage, EURPage
+import os
 
 """
 STEP 0: Initialize driver
@@ -18,7 +16,7 @@ STEP 1: Login to LinkedIn
 """
 login = LoginPage(driver, pre_seed)
 driver.get(login.url)
-login.login("o.dorhoutmees@gmail.com", "u7*Js,XcfE$7ccv")
+login.login(os.environ["LI_USERNAME"], os.environ["LI_PASSWORD"])
 
 """
 STEP 2: Scrape TU Delft

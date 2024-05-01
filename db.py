@@ -1,9 +1,10 @@
 import pymysql as sql
+import os
 
 class profiles_db:
     def __init__(self) -> None:
-        self.mysql = sql.connect(database="graduate_db", user="GraduateEntrepreneurAdminLogin",
-                                    password="ThisIsThePasscodeForTheSourcingSQLDatabaseForSourcingPurposesAndMore123!",
+        self.mysql = sql.connect(database="graduate_db", user=os.environ["DB_USERNAME"],
+                                    password=os.environ["DB_PASSWORD"],
                                     host="graduateentrepreneurserver.mysql.database.azure.com", port=3306,
                                     ssl={'ca': '/Users/jandomhof/Documents/DigiCertGlobalRootCA.crt.pem'})
 
