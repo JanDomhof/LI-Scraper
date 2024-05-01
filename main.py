@@ -1,4 +1,4 @@
-"""This file will run to execute all the logics and commands"""
+"""This file will run to execute all the logics and ands"""
 import undetected_chromedriver as uc
 import time
 
@@ -8,38 +8,41 @@ from page import LoginPage, TUPage, EURPage
 """
 STEP 0: Initialize driver
 """
-driver = uc.Chrome(version_main=117)
+options = uc.ChromeOptions()
+options.headless = False
+driver = uc.Chrome(options=options,version_main=122)
+pre_seed = False
 
 """
 STEP 1: Login to LinkedIn
 """
-login = LoginPage(driver)
+login = LoginPage(driver, pre_seed)
 driver.get(login.url)
-login.login("j.h.domhof@outlook.com", "=ggB?^8fEWPz2t")
+login.login("o.dorhoutmees@gmail.com", "u7*Js,XcfE$7ccv")
 
 """
 STEP 2: Scrape TU Delft
 """
-tu = TUPage(driver)
+tu = TUPage(driver, pre_seed)
 driver.get(tu.url)
-founders = tu.scrape()
+tu.scrape()
+tu.persist()
+tu.close()
+
 
 """
 STEP 3: Scrape EUR
 """
-# eur = EURPage(driver)
-# driver.get(eur.url)
-# eur.scrape()
+eur = EURPage(driver, pre_seed)
+driver.get(eur.url)
+eur.scrape()
+eur.persist()
+eur.close()
 
 """
-STEP 4: Save to DB
-"""
-tu.persist()
-# eur.persist()
-
-"""
-STEP 5: Close
+STEP 4: Close
 """
 driver.close()
-tu.close()
-# eur.close()
+
+
+print("DONE!")

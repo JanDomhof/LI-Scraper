@@ -5,29 +5,40 @@ class profiles_db:
         self.mysql = sql.connect(database="graduate_db", user="GraduateEntrepreneurAdminLogin",
                                     password="ThisIsThePasscodeForTheSourcingSQLDatabaseForSourcingPurposesAndMore123!",
                                     host="graduateentrepreneurserver.mysql.database.azure.com", port=3306,
-                                    ssl={'ca': '/Users/janjr/DigiCertGlobalRootCA.crt.pem'})
+                                    ssl={'ca': '/Users/jandomhof/Documents/DigiCertGlobalRootCA.crt.pem'})
 
         # create cursor
         self.cursor = self.mysql.cursor()
 
     def fetch_names(self) -> list:
         # fetch all queries and save in pandas df
-        self.cursor.execute("SELECT Name FROM profiles_db")
+        self.cursor.execute("SELECT Name FROM li_profiles")
         records = self.cursor.fetchall()
         return [record[0] for record in records]
     
+    def fetch_linkedin_urls(self) -> list:
+        # fetch all queries and save in pandas df
+        self.cursor.execute("SELECT Linkedin FROM li_profiles")
+        records = self.cursor.fetchall()
+        return [record[0] for record in records]
+
     def close(self) -> None:
         self.cursor.close()
         self.mysql.close()
 
     def insert(self, founders) -> None:
-        founder_tuples = [(founder.name, founder.linkedin, founder.title, founder.university, founder.year, founder.title_indicates_founder, founder.in_edda, founder.matching_edda_word, founder.assignee, founder.checked, founder.added_to_edda) for founder in founders]
+        founder_tuples = [(founder["Name"], founder["Linkedin"], founder["Title"], founder["University"], founder["Year"], founder["TitleIndicatesFounder"], founder["InEdda"], founder["MatchingEddaWord"], founder["Assignee"], founder["Checked"], founder["AddedToEdda"]) for founder in founders]
         columns = "Name, Linkedin, Title, University, Year, TitleIndicatesFounder, InEdda, MatchingEddaWord, Assignee, Checked, AddedToEdda"
-        query = f"INSERT INTO profiles_db ({columns}) VALUES (%s, %s, %s)"
+        query = f"INSERT INTO li_profiles ({columns}) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
         self.cursor.executemany(query, founder_tuples)
         self.mysql.commit()
+        print(f"Committed {len(founders)} profiles")
 
-    def fetch_assignees(self) -> dict:
-        self.cursor.execute("SELECT Assignee, COUNT(*) as count FROM profiles_db GROUP BY Assignee ORDER BY count ASC")
-        records = self.cursor.fetchall()
-        return {rec[0]: rec[1] for rec in records}
+    def fetch_assignees(self, names) -> dict:
+        assignees = {}
+        for name in names:
+            self.cursor.execute(f'SELECT COUNT(*) FROM li_profiles WHERE Assignee="{name}" AND Checked=0 AND TitleIndicatesFounder=1')
+            records = self.cursor.fetchall()
+            assignees[name] = int(records[0][0])
+
+        return assignees

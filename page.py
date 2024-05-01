@@ -21,11 +21,23 @@ class BasePage:
 
     page = BasePage(driver)
     """
-    def __init__(self, driver:Remote) -> None:
+    def __init__(self, driver:Remote, pre_seed) -> None:
         self.driver: Remote = driver
         self.driver.maximize_window()
         self.db = profiles_db()
         self.edda = Edda()
+        self.pre_seed = pre_seed
+        self.founder_elements = []
+
+        if pre_seed:
+            names = ['Daan', 'Boaz', 'Ole', 'Jan', 'Tessa', 'Elsa', 'Robin', 'Rozanne', 'Sophie']
+        else:
+            names = ['Ileana', 'Jasper', 'Isabelle']
+
+        self.assignees = self.db.fetch_assignees(names)
+
+
+
 
     def find(self, selector: Selector) -> WebElement:
         """This method will find and return an element from the driver"""
@@ -143,7 +155,7 @@ class BasePage:
             scroll.move_to_element(element).perform()
         return element
     
-    def scrape_page(self, title):
+    def scrape_page(self, title, first):
         # Enter the 
         title_field = self.wait_until_find(TUDelftResources.FunctionField, 10)
         self.click(title_field)
@@ -151,18 +163,27 @@ class BasePage:
 
         time.sleep(5)
 
-        start_year_field = self.wait_until_find(TUDelftResources.StartYearField, 10)
-        self.click(start_year_field)
-        self.send_keys(start_year_field, "2015").send_keys(Keys.ENTER)
+        if first:
+            if self.pre_seed:
+                start_year_field = self.wait_until_find(TUDelftResources.StartYearField, 10)
+                self.click(start_year_field)
+                self.send_keys(start_year_field, "2015").send_keys(Keys.ENTER)
+            else:
+                end_year_field = self.wait_until_find(TUDelftResources.EndYearField, 10)
+                self.click(end_year_field)
+                self.send_keys(end_year_field, "2015").send_keys(Keys.ENTER)
+            time.sleep(5)
 
-        time.sleep(5)
+        for _ in range(50):
+            try:
+                show_more_button = self.wait_until_find(TUDelftResources.ShowMoreButton, 5)
+                self.scroll_to_element(show_more_button)
+                time.sleep(1)
+            except:
+                print("Reached bottom!")
+                break
 
-        for _ in range(3):
-            show_more_button = self.wait_until_find(TUDelftResources.ShowMoreButton, 10)
-            self.scroll_to_element(show_more_button)
-            time.sleep(1)
-
-        self.founder_elements = self.wait_until_find_all(TUDelftResources.Founder, 10)
+        self.founder_elements.extend(self.wait_until_find_all(TUDelftResources.Founder, 10))
 
     def persist(self):
         self.db.insert(self.founders)
@@ -171,45 +192,71 @@ class BasePage:
         self.db.close()
     
     def scrape(self):
-        titles = ["founder"]
+        titles = ['founder', 'cto', 'cfo', 'ceo', 'oprichter', 'eigenaar', 'cso', 'co-founder']
+        first = True
+        
         for title in titles:
-            self.scrape_page(title)
+            self.scrape_page(title, first)
+            first = False
 
-        founder_names_db = self.db.fetch_names()
-        assignees = self.db.fetch_assignees()
-        self.founders = []
+            founder_names_db = self.db.fetch_names()
+            founder_li_db = self.db.fetch_linkedin_urls()
+            self.founders = []
 
-        for founder in self.founder_elements:
-            if self.find_from_element(founder, TUDelftResources.FounderName).text.strip() not in founder_names_db:
-                edda_response = self.edda.get_company_by_name(self.find_from_element(founder, TUDelftResources.FounderName).text.strip())
-                in_edda = 1 if len(edda_response) > 0 else 0
-                edda_company = self.edda.get_company_by_id(edda_response["id"]) if in_edda else None
-                self.founders.append({
-                    "Name": self.find_from_element(founder, TUDelftResources.FounderName).text.strip(),
-                    "Linkedin": self.find_from_element(founder, TUDelftResources.FounderLink).get_attribute("href"),
-                    "Title": self.find_from_element(founder, TUDelftResources.FounderTitle).text.strip(),
-                    "University": self.uni,
-                    "Year": None,
-                    "TitleIndicatesFounder": 1 if any(
-                        keyword in self.find_from_element(founder, TUDelftResources.FounderTitle).text.lower().strip() for keyword in
-                        ['founder', 'eigenaar', 'oprichter', 'cto', 'cfo', 'ceo']) else 0,
-                    "InEdda": 1 if in_edda else 0,
-                    "MatchingEddaWord": edda_response[0]["name"] if in_edda else "",
-                    "Assignee": edda_company["owners"][0]["firstname"] if in_edda else min(assignees, key=assignees.get),
-                    "Checked": 0,
-                    "AddedToEdda": 0,
-                    "Vertical": self.edda.get_company_fields("864", edda_response["id"])["value"]["name"] if in_edda else None
-                })
-                print(self.founders[-1])
-                assignees[min(assignees, key=assignees.get)] += 1
-                break
+            for founder in self.founder_elements:
+                try:
+                    current_founder = self.find_from_element(founder, TUDelftResources.FounderName).text.strip()
+                    current_founder_li = self.find_from_element(founder, TUDelftResources.FounderLink).get_attribute("href")
+                except:
+                    continue
+                if current_founder in founder_names_db or current_founder_li in founder_li_db:
+                    print(f"{self.find_from_element(founder, TUDelftResources.FounderName).text.strip()} already in the db.")
+                    continue
+                # edda_response = self.edda.get_company_by_name(self.find_from_element(founder, TUDelftResources.FounderName).text.strip())
+                # in_edda = 1 if len(edda_response) > 0 else 0
+                # edda_company = self.edda.get_company_by_id(edda_response["id"]) if in_edda else None
+                edda_response = []
+                in_edda = 0
+                edda_company = ""
+                try:
+                    # check if duplicate
+                    self.founders.append({
+                        "Name": self.find_from_element(founder, TUDelftResources.FounderName).text.strip(),
+                        "Linkedin": self.find_from_element(founder, TUDelftResources.FounderLink).get_attribute("href"),
+                        "Title": self.find_from_element(founder, TUDelftResources.FounderTitle).text.strip(),
+                        "University": self.uni,
+                        "Year": None,
+                        "TitleIndicatesFounder": 1 if self.check_if_founder(self.find_from_element(founder, TUDelftResources.FounderTitle).text.lower().strip()) else 0,
+                        "InEdda": 1 if in_edda else 0,
+                        "MatchingEddaWord": edda_response[0]["name"] if in_edda else "",
+                        "Assignee": edda_company["owners"][0]["firstname"] if in_edda else min(self.assignees, key=self.assignees.get),
+                        "Checked": 0,
+                        "AddedToEdda": 0,
+                        "Vertical": self.edda.get_company_fields("864", edda_response["id"])["value"]["name"] if in_edda else None
+                    })
+                except:
+                    continue
+                self.assignees[min(self.assignees, key=self.assignees.get)] += 1
+
+            self.founder_elements = []
+            remove_filter_button = self.wait_until_find(TUDelftResources.RemoveFilterButton, 10)
+            self.scroll_to_element(remove_filter_button)
+            self.click(remove_filter_button)
+            print("------------ Clicked! -------------")
+
+    def check_if_founder(self, title) -> bool:
+        bad_keyword_found = any(keyword in title for keyword in['consultant', 'consultancy', 'consulting', 'consult', 'consultation', 'strategy', 'strategic', 'art', 'arts', 'design', 'designer', 'studio', 'architect', 'architecture', 'law', 'lawyer'])
+        good_keyword_found = any(keyword in title for keyword in['founder', 'eigenaar', 'oprichter', 'cto', 'cfo', 'ceo'])
+        return False if bad_keyword_found else good_keyword_found
 
 class LoginPage (BasePage):
-    def __init__(self, driver: Remote) -> None:
-        super().__init__(driver)
+    def __init__(self, driver: Remote, pre_seed) -> None:
+        super().__init__(driver, pre_seed)
         self.url = LoginPageResources.URL
 
-    def login(self, email: str, password: str):       
+    def login(self, email: str, password: str):  
+        self.driver.get(LoginPageResources.URL)  
+          
         username_field = self.wait_until_find(LoginPageResources.UsernameField, 10)
         self.click(username_field)
         self.send_keys(username_field, email)
@@ -224,13 +271,13 @@ class LoginPage (BasePage):
         return self
 
 class TUPage (BasePage):
-    def __init__(self, driver: Remote) -> None:
-        super().__init__(driver)
+    def __init__(self, driver: Remote, pre_seed) -> None:
+        super().__init__(driver, pre_seed)
         self.url = TUDelftResources.URL
         self.uni = "TU Delft"
 
 class EURPage (BasePage):
-    def __init__(self, driver: Remote) -> None:
-        super().__init__(driver)
+    def __init__(self, driver: Remote, pre_seed) -> None:
+        super().__init__(driver, pre_seed)
         self.url = EURResources.URL
         self.uni = "Erasmus University Rotterdam"
