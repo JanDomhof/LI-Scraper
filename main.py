@@ -96,9 +96,9 @@ while True:
                             new_title=uni_seed.report_new_title,
                             old=uni_seed.report_old,
                             error=uni_seed.report_error)
-        driver.close()
         
 
+    driver.close()
     """
     STEP 5: Create report:
                 - Total time

@@ -193,7 +193,6 @@ class BasePage:
             pass
 
     def persist(self):
-        print(self.founders)
         self.db.insert(self.founders)
 
     def close(self):
@@ -201,6 +200,7 @@ class BasePage:
     
     def scrape(self):
         titles = ['founder', 'cto', 'cfo', 'ceo', 'oprichter', 'eigenaar', 'cso', 'co-founder']
+        titles = ['founder', 'cto']
         first = True
         
         for title in titles:
@@ -216,23 +216,26 @@ class BasePage:
                     current_founder_li = self.find_from_element(founder, TUDelftResources.FounderLink).get_attribute("href")
                     current_founder_title = self.find_from_element(founder, TUDelftResources.FounderTitle).text.strip()
                 except:
-                    print("Error with fetching the details")
                     continue
                 self.report_total += 1
+
+                # if already found, skip
+                name_already_found = current_founder in [f["Name"] for f in self.founders]
+                li_already_found = current_founder_li in [f["Linkedin"] for f in self.founders]
+                if name_already_found or li_already_found:
+                    continue
+
                 
                 # check if name is already in db
                 if db_records['Name'].str.contains(current_founder).any() or db_records['Linkedin'].str.contains(current_founder_li).any():
                     # if title has changed, change title and set checked to 0
                     if not db_records.loc[db_records['Name'] == current_founder]['Title'].str.contains(current_founder_title).any():
-                        print("Already in db -> new title")
                         self.db.update_title(current_founder, current_founder_title)
                         self.report_new_title += 1
                     else:
-                        print("Already in db -> old")
                         self.report_old += 1
                     continue
                 
-                print("adding founder")
                 # if not in db, try to fetch all data and create new founder
                 try:
                     self.founders.append({
@@ -249,8 +252,6 @@ class BasePage:
                         "AddedToEdda": 0,
                         "Vertical": None
                     })
-                    print(f"new founder found: {self.founders[-1]['Name']}!")
-                    print(f"self.founders size: {len(self.founders)}")
                     self.report_new += 1
                     self.assignees[min(self.assignees, key=self.assignees.get)] += 1
                 except Exception as e:
