@@ -2,6 +2,9 @@
 import undetected_chromedriver as uc
 from page import LoginPage, TUPage, EURPage
 import os
+import time
+from dotenv import load_dotenv
+load_dotenv()
 
 """
 STEP 0: Initialize driver

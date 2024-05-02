@@ -1,5 +1,7 @@
 import pymysql as sql
 import os
+from dotenv import load_dotenv
+load_dotenv()
 
 class profiles_db:
     def __init__(self) -> None:

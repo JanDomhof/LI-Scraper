@@ -1,6 +1,8 @@
 import requests
 import json
 import os
+from dotenv import load_dotenv
+load_dotenv()
 
 class Edda:
     def __init__(self):

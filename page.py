@@ -174,7 +174,7 @@ class BasePage:
                 self.send_keys(end_year_field, "2015").send_keys(Keys.ENTER)
             time.sleep(5)
 
-        for _ in range(50):
+        for _ in range(3):
             try:
                 show_more_button = self.wait_until_find(TUDelftResources.ShowMoreButton, 5)
                 self.scroll_to_element(show_more_button)
@@ -193,6 +193,7 @@ class BasePage:
     
     def scrape(self):
         titles = ['founder', 'cto', 'cfo', 'ceo', 'oprichter', 'eigenaar', 'cso', 'co-founder']
+        titles = ['founder']
         first = True
         
         for title in titles:

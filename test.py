@@ -1,4 +1,5 @@
-from db import profiles_db
+import os
+from dotenv import load_dotenv
+load_dotenv()
 
-db = profiles_db()
-print(db.fetch_names())
+print(os.environ["LI_USERNAME"])
