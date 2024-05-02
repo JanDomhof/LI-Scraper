@@ -37,3 +37,50 @@ class TUDelftResources (UniPageResources):
 
 class EURResources (UniPageResources):
     URL = "https://www.linkedin.com/school/erasmus-university-rotterdam/people/"
+
+class UNI:
+    def __init__(self, name, url, year_option=True) -> None:
+        self.name = name
+        self.url = url
+        self.year_option = year_option
+
+    def set_seed_report(self, runtime, total, new, new_title, old, error) -> None:
+        self.seed_runtime = runtime
+        self.seed_total = total
+        self.seed_new = new
+        self.seed_new_title = new_title
+        self.seed_old = old
+        self.seed_error = error
+
+    def set_pre_seed_report(self, runtime, total, new, new_title, old, error) -> None:
+        self.pre_seed_runtime = runtime
+        self.pre_seed_total = total
+        self.pre_seed_new = new
+        self.pre_seed_new_title = new_title
+        self.pre_seed_old = old
+        self.pre_seed_error = error
+
+    def get_report(self) -> str:
+        return f"""
+=========================
+University Scraper Report
+University name: {self.name}
+University url: {self.url}
+
+SEED REPORT
+Found a total of {self.seed_total} profiles in {self.seed_runtime} minutes:
+Nr of new profiles: {self.seed_new}
+Nr of profiles with a new title: {self.seed_new_title}
+Nr of already known profiles: {self.seed_old}
+Nr of errors: {self.seed_error}
+
+PRE SEED REPORT
+Found a total of {self.pre_seed_total} profiles in {self.pre_seed_runtime} minutes:
+Nr of new profiles: {self.pre_seed_new}
+Nr of profiles with a new title: {self.pre_seed_new_title}
+Nr of already known profiles: {self.pre_seed_old}
+Nr of errors: {self.pre_seed_error}
+=========================
+"""
+    
+    

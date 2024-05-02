@@ -1,5 +1,6 @@
 import pymysql as sql
 import os
+import pandas as pd
 from dotenv import load_dotenv
 load_dotenv()
 
@@ -24,18 +25,28 @@ class profiles_db:
         self.cursor.execute("SELECT Linkedin FROM li_profiles")
         records = self.cursor.fetchall()
         return [record[0] for record in records]
+    
+    def fetch_name_li_title(self) -> list:
+        # fetch all queries and save in pandas df
+        query = "SELECT Name, Linkedin, Title FROM li_profiles"
+        return pd.read_sql(query, self.mysql)
 
     def close(self) -> None:
         self.cursor.close()
         self.mysql.close()
 
-    def insert(self, founders) -> None:
+    def insert(self, founders) -> int:
         founder_tuples = [(founder["Name"], founder["Linkedin"], founder["Title"], founder["University"], founder["Year"], founder["TitleIndicatesFounder"], founder["InEdda"], founder["MatchingEddaWord"], founder["Assignee"], founder["Checked"], founder["AddedToEdda"]) for founder in founders]
         columns = "Name, Linkedin, Title, University, Year, TitleIndicatesFounder, InEdda, MatchingEddaWord, Assignee, Checked, AddedToEdda"
         query = f"INSERT INTO li_profiles ({columns}) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
         self.cursor.executemany(query, founder_tuples)
         self.mysql.commit()
-        print(f"Committed {len(founders)} profiles")
+        return len(founders)
+
+    def update_title(self, name, title):
+        query = f'UPDATE li_profiles SET Title="{title}", Checked=0 WHERE Name="{name}"'
+        self.cursor.execute(query)
+        self.mysql.commit()
 
     def fetch_assignees(self, names) -> dict:
         assignees = {}
