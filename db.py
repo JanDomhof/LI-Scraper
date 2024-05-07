@@ -36,6 +36,7 @@ class profiles_db:
         self.mysql.close()
 
     def insert(self, founders) -> int:
+        print([(f["Name"], f["Linkedin"], f["Title"]) for f in founders])
         founder_tuples = [(founder["Name"], founder["Linkedin"], founder["Title"], founder["University"], founder["Year"], founder["TitleIndicatesFounder"], founder["InEdda"], founder["MatchingEddaWord"], founder["Assignee"], founder["Checked"], founder["AddedToEdda"]) for founder in founders]
         columns = "Name, Linkedin, Title, University, Year, TitleIndicatesFounder, InEdda, MatchingEddaWord, Assignee, Checked, AddedToEdda"
         query = f"INSERT INTO li_profiles ({columns}) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"

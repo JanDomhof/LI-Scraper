@@ -1,0 +1,30 @@
+Scraper report nr. 5
+
+Timestamp: Thu May  2 17:59:17 2024
+Found a total of 65 profiles in 0.005592379702462091 hours:
+Nr of new profiles: 1
+Nr of profiles with a new title: 0
+Nr of already known profiles: 64
+Nr of errors: 0
+
+Below is a report for every UNI page:
+
+=========================
+University Scraper Report
+University name: TU Delft | Technology, Policy and Management
+University url: https://www.linkedin.com/school/tu-delft-technology-policy-and-management/people/
+
+SEED REPORT
+Found a total of 10 profiles in 0.334323247273763 minutes:
+Nr of new profiles: 1
+Nr of profiles with a new title: 0
+Nr of already known profiles: 9
+Nr of errors: 0
+
+PRE SEED REPORT
+Found a total of 55 profiles in 0.49379993279774986 minutes:
+Nr of new profiles: 0
+Nr of profiles with a new title: 0
+Nr of already known profiles: 55
+Nr of errors: 0
+=========================

@@ -213,7 +213,7 @@ class BasePage:
                 # get name, linkedin, title to check for duplicates
                 try:
                     current_founder = self.find_from_element(founder, TUDelftResources.FounderName).text.strip()
-                    current_founder_li = self.find_from_element(founder, TUDelftResources.FounderLink).get_attribute("href")
+                    current_founder_li = self.find_from_element(founder, TUDelftResources.FounderLink).get_attribute("href").split("?")[0]
                     current_founder_title = self.find_from_element(founder, TUDelftResources.FounderTitle).text.strip()
                 except:
                     continue
@@ -224,7 +224,6 @@ class BasePage:
                 li_already_found = current_founder_li in [f["Linkedin"] for f in self.founders]
                 if name_already_found or li_already_found:
                     continue
-
                 
                 # check if name is already in db
                 if db_records['Name'].str.contains(current_founder).any() or db_records['Linkedin'].str.contains(current_founder_li).any():
@@ -239,9 +238,9 @@ class BasePage:
                 # if not in db, try to fetch all data and create new founder
                 try:
                     self.founders.append({
-                        "Name": self.find_from_element(founder, TUDelftResources.FounderName).text.strip(),
-                        "Linkedin": self.find_from_element(founder, TUDelftResources.FounderLink).get_attribute("href"),
-                        "Title": self.find_from_element(founder, TUDelftResources.FounderTitle).text.strip(),
+                        "Name": current_founder,
+                        "Linkedin": current_founder_li,
+                        "Title": current_founder_title,
                         "University": self.uni,
                         "Year": None,
                         "TitleIndicatesFounder": 1 if self.check_if_founder(self.find_from_element(founder, TUDelftResources.FounderTitle).text.lower().strip()) else 0,

@@ -25,7 +25,7 @@ while True:
     login = LoginPage(driver, False)
     driver.get(login.url)
     login.login(os.environ["LI_USERNAME"], os.environ["LI_PASSWORD"])
-
+    
     """
     STEP 2: UNIs list
     """
@@ -41,23 +41,23 @@ while True:
         # UNI(name="Erasmus MC Graduate School", url="https://www.linkedin.com/company/erasmus-mc-graduate-school/people/"),
     ]
     unis = [
-        UNI(name="TU Delft", url="https://www.linkedin.com/school/tudelft/people/"),
-        UNI(name="TU Delft | Electrical Engineering, Mathematics and Computer Science", url="https://www.linkedin.com/company/tu-delft-electrical-engineering-mathematics-and-computer-science/people/", year_option=False),
-        UNI(name="TU Delft | Applied Sciences", url="https://www.linkedin.com/company/tu-delft-applied-sciences/people/", year_option=False),
-        UNI(name="TU Delft | Aerospace Engineering", url="https://www.linkedin.com/company/tu-delft-aerospace-engineering/people/", year_option=False),
-        UNI(name="TU Delft | Civil Engineering and Geosciences", url="https://www.linkedin.com/school/tu-delft-civil-engineering-geosciences/people/"),
-        UNI(name="TU Delft | Mechanical Engineering", url="https://www.linkedin.com/school/tu-delft-mechanical-engineering/people/"),
+        # UNI(name="TU Delft", url="https://www.linkedin.com/school/tudelft/people/"),
+        # UNI(name="TU Delft | Electrical Engineering, Mathematics and Computer Science", url="https://www.linkedin.com/company/tu-delft-electrical-engineering-mathematics-and-computer-science/people/", year_option=False),
+        # UNI(name="TU Delft | Applied Sciences", url="https://www.linkedin.com/company/tu-delft-applied-sciences/people/", year_option=False),
+        # UNI(name="TU Delft | Aerospace Engineering", url="https://www.linkedin.com/company/tu-delft-aerospace-engineering/people/", year_option=False),
+        # UNI(name="TU Delft | Civil Engineering and Geosciences", url="https://www.linkedin.com/school/tu-delft-civil-engineering-geosciences/people/"),
+        # UNI(name="TU Delft | Mechanical Engineering", url="https://www.linkedin.com/school/tu-delft-mechanical-engineering/people/"),
         UNI(name="TU Delft | Technology, Policy and Management", url="https://www.linkedin.com/school/tu-delft-technology-policy-and-management/people/"),
-        UNI(name="TU Delft | Industrial Design Engineering", url="https://www.linkedin.com/school/idetudelft/people/"),
-        UNI(name="Erasmus University", url="https://www.linkedin.com/school/erasmus-university-rotterdam/people/"),
-        UNI(name="Erasmus School of Accounting & Assurance", url="https://www.linkedin.com/school/erasmus-school-of-accounting-assurance-registercontroller/people/"),
-        UNI(name="Erasmus School of Philosophy", url="https://www.linkedin.com/company/erasmus-school-of-philosophy/people/", year_option=False),
-        UNI(name="Erasmus School of History, Culture and Communication", url="https://www.linkedin.com/school/erasmus-school-of-history-culture-and-communication-eshcc/people/"),
-        UNI(name="Erasmus School of Social and Behavioural Sciences", url="https://www.linkedin.com/school/erasmus-school-of-social-and-behavioural-sciences-essb/people/"),
-        UNI(name="Erasmus School of Health Policy & Management", url="https://www.linkedin.com/company/erasmus-school-of-health-policy-&-management/people/", year_option=False), 
-        UNI(name="Erasmus School of Law", url="https://www.linkedin.com/school/erasmus-school-of-law/people/"),
-        UNI(name="Erasmus School of Economics", url="https://www.linkedin.com/school/erasmus-school-of-economics/people/"),
-        UNI(name="Erasmus Rotterdam School of Management", url="https://www.linkedin.com/school/rotterdam-school-of-management-erasmus-university/people/"),
+        # UNI(name="TU Delft | Industrial Design Engineering", url="https://www.linkedin.com/school/idetudelft/people/"),
+        # UNI(name="Erasmus University", url="https://www.linkedin.com/school/erasmus-university-rotterdam/people/"),
+        # UNI(name="Erasmus School of Accounting & Assurance", url="https://www.linkedin.com/school/erasmus-school-of-accounting-assurance-registercontroller/people/"),
+        # UNI(name="Erasmus School of Philosophy", url="https://www.linkedin.com/company/erasmus-school-of-philosophy/people/", year_option=False),
+        # UNI(name="Erasmus School of History, Culture and Communication", url="https://www.linkedin.com/school/erasmus-school-of-history-culture-and-communication-eshcc/people/"),
+        # UNI(name="Erasmus School of Social and Behavioural Sciences", url="https://www.linkedin.com/school/erasmus-school-of-social-and-behavioural-sciences-essb/people/"),
+        # UNI(name="Erasmus School of Health Policy & Management", url="https://www.linkedin.com/company/erasmus-school-of-health-policy-&-management/people/", year_option=False), 
+        # UNI(name="Erasmus School of Law", url="https://www.linkedin.com/school/erasmus-school-of-law/people/"),
+        # UNI(name="Erasmus School of Economics", url="https://www.linkedin.com/school/erasmus-school-of-economics/people/"),
+        # UNI(name="Erasmus Rotterdam School of Management", url="https://www.linkedin.com/school/rotterdam-school-of-management-erasmus-university/people/"),
     ]
 
     """
@@ -96,9 +96,12 @@ while True:
                             new_title=uni_seed.report_new_title,
                             old=uni_seed.report_old,
                             error=uni_seed.report_error)
-        
 
+    """
+    STEP 4: Close driver
+    """
     driver.close()
+
     """
     STEP 5: Create report:
                 - Total time
