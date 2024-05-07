@@ -64,38 +64,42 @@ while True:
     STEP 3: SCRAPE!!!
     """
     for u in unis:
-        start_time = time.time()
-        # Scrape uni for pre-seed
-        uni_pre_seed = UNIPage(driver=driver, pre_seed=True, url=u.url, name=u.name)
-        driver.get(uni_pre_seed.url)
-        uni_pre_seed.scrape()
-        uni_pre_seed.persist()
-        uni_pre_seed.close()
+        try:
+            start_time = time.time()
+            # Scrape uni for pre-seed
+            uni_pre_seed = UNIPage(driver=driver, pre_seed=True, url=u.url, name=u.name)
+            driver.get(uni_pre_seed.url)
+            uni_pre_seed.scrape()
+            uni_pre_seed.persist()
+            uni_pre_seed.close()
 
-        # Set pre-seed report
-        u.set_pre_seed_report(runtime=(time.time() - start_time) / 60,
-                              total=uni_pre_seed.report_total,
-                              new=uni_pre_seed.report_new,
-                              new_title=uni_pre_seed.report_new_title,
-                              old=uni_pre_seed.report_old,
-                              error=uni_pre_seed.report_error)
+            # Set pre-seed report
+            u.set_pre_seed_report(runtime=(time.time() - start_time) / 60,
+                                total=uni_pre_seed.report_total,
+                                new=uni_pre_seed.report_new,
+                                new_title=uni_pre_seed.report_new_title,
+                                old=uni_pre_seed.report_old,
+                                error=uni_pre_seed.report_error)
 
-        start_time = time.time()
-        # Scrape uni for seed
-        uni_seed = UNIPage(driver=driver, pre_seed=False, url=u.url, name=u.name)
-        if u.year_option:
-            driver.get(uni_seed.url)
-            uni_seed.scrape()
-            uni_seed.persist()
-            uni_seed.close()
+            start_time = time.time()
+            # Scrape uni for seed
+            uni_seed = UNIPage(driver=driver, pre_seed=False, url=u.url, name=u.name)
+            if u.year_option:
+                driver.get(uni_seed.url)
+                uni_seed.scrape()
+                uni_seed.persist()
+                uni_seed.close()
 
-        # Set seed report
-        u.set_seed_report(runtime=(time.time() - start_time) / 60,
-                            total=uni_seed.report_total,
-                            new=uni_seed.report_new,
-                            new_title=uni_seed.report_new_title,
-                            old=uni_seed.report_old,
-                            error=uni_seed.report_error)
+            # Set seed report
+            u.set_seed_report(runtime=(time.time() - start_time) / 60,
+                                total=uni_seed.report_total,
+                                new=uni_seed.report_new,
+                                new_title=uni_seed.report_new_title,
+                                old=uni_seed.report_old,
+                                error=uni_seed.report_error)
+        except Exception as e:
+            print(f"Error with scraper for: {u.name}\n{e}")
+
 
     """
     STEP 4: Close driver
