@@ -44,6 +44,21 @@ class UNI:
         self.url = url
         self.year_option = year_option
 
+        self.seed_runtime = 0
+        self.seed_total = 0
+        self.seed_new = 0
+        self.seed_new_title = 0
+        self.seed_old = 0
+        self.seed_error = 0
+
+        self.pre_seed_runtime = 0
+        self.pre_seed_total = 0
+        self.pre_seed_new = 0
+        self.pre_seed_new_title = 0
+        self.pre_seed_old = 0
+        self.pre_seed_error = 0
+
+
     def set_seed_report(self, runtime, total, new, new_title, old, error) -> None:
         self.seed_runtime = runtime
         self.seed_total = total
