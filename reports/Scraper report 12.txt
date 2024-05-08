@@ -1,0 +1,350 @@
+Scraper report nr. 12
+
+Timestamp: Wed May  8 13:33:55 2024
+Found a total of 807 profiles in 0.012694956991407606 hours:
+Nr of new profiles: 273
+Nr of profiles with a new title: 19
+Nr of already known profiles: 515
+Nr of errors: 0
+
+Below is a report for every UNI page:
+
+=========================
+University Scraper Report
+University name: TU Delft
+University url: https://www.linkedin.com/school/tudelft/people/
+
+SEED REPORT
+Found a total of 24 profiles in 1.3500622709592183 minutes:
+Nr of new profiles: 0
+Nr of profiles with a new title: 0
+Nr of already known profiles: 24
+Nr of errors: 0
+
+PRE SEED REPORT
+Found a total of 24 profiles in 1.4129277149836221 minutes:
+Nr of new profiles: 0
+Nr of profiles with a new title: 0
+Nr of already known profiles: 24
+Nr of errors: 0
+=========================
+
+=========================
+University Scraper Report
+University name: TU Delft | Electrical Engineering, Mathematics and Computer Science
+University url: https://www.linkedin.com/company/tu-delft-electrical-engineering-mathematics-and-computer-science/people/
+
+SEED REPORT
+Found a total of 0 profiles in 0.01947547197341919 minutes:
+Nr of new profiles: 0
+Nr of profiles with a new title: 0
+Nr of already known profiles: 0
+Nr of errors: 0
+
+PRE SEED REPORT
+Found a total of 0 profiles in 0.8854750871658326 minutes:
+Nr of new profiles: 0
+Nr of profiles with a new title: 0
+Nr of already known profiles: 0
+Nr of errors: 0
+=========================
+
+=========================
+University Scraper Report
+University name: TU Delft | Applied Sciences
+University url: https://www.linkedin.com/company/tu-delft-applied-sciences/people/
+
+SEED REPORT
+Found a total of 0 profiles in 0.019309361775716145 minutes:
+Nr of new profiles: 0
+Nr of profiles with a new title: 0
+Nr of already known profiles: 0
+Nr of errors: 0
+
+PRE SEED REPORT
+Found a total of 2 profiles in 0.6751378854115804 minutes:
+Nr of new profiles: 0
+Nr of profiles with a new title: 0
+Nr of already known profiles: 2
+Nr of errors: 0
+=========================
+
+=========================
+University Scraper Report
+University name: TU Delft | Aerospace Engineering
+University url: https://www.linkedin.com/company/tu-delft-aerospace-engineering/people/
+
+SEED REPORT
+Found a total of 0 profiles in 0 minutes:
+Nr of new profiles: 0
+Nr of profiles with a new title: 0
+Nr of already known profiles: 0
+Nr of errors: 0
+
+PRE SEED REPORT
+Found a total of 0 profiles in 0 minutes:
+Nr of new profiles: 0
+Nr of profiles with a new title: 0
+Nr of already known profiles: 0
+Nr of errors: 0
+=========================
+
+=========================
+University Scraper Report
+University name: TU Delft | Civil Engineering and Geosciences
+University url: https://www.linkedin.com/school/tu-delft-civil-engineering-geosciences/people/
+
+SEED REPORT
+Found a total of 12 profiles in 1.1085873246192932 minutes:
+Nr of new profiles: 0
+Nr of profiles with a new title: 0
+Nr of already known profiles: 12
+Nr of errors: 0
+
+PRE SEED REPORT
+Found a total of 14 profiles in 0.924936048189799 minutes:
+Nr of new profiles: 0
+Nr of profiles with a new title: 0
+Nr of already known profiles: 14
+Nr of errors: 0
+=========================
+
+=========================
+University Scraper Report
+University name: TU Delft | Mechanical Engineering
+University url: https://www.linkedin.com/school/tu-delft-mechanical-engineering/people/
+
+SEED REPORT
+Found a total of 16 profiles in 0.9422553459803263 minutes:
+Nr of new profiles: 0
+Nr of profiles with a new title: 0
+Nr of already known profiles: 16
+Nr of errors: 0
+
+PRE SEED REPORT
+Found a total of 20 profiles in 0.9334462126096089 minutes:
+Nr of new profiles: 0
+Nr of profiles with a new title: 0
+Nr of already known profiles: 20
+Nr of errors: 0
+=========================
+
+=========================
+University Scraper Report
+University name: TU Delft | Technology, Policy and Management
+University url: https://www.linkedin.com/school/tu-delft-technology-policy-and-management/people/
+
+SEED REPORT
+Found a total of 10 profiles in 0.5102118055025736 minutes:
+Nr of new profiles: 0
+Nr of profiles with a new title: 0
+Nr of already known profiles: 10
+Nr of errors: 0
+
+PRE SEED REPORT
+Found a total of 15 profiles in 0.9274057229359944 minutes:
+Nr of new profiles: 0
+Nr of profiles with a new title: 0
+Nr of already known profiles: 15
+Nr of errors: 0
+=========================
+
+=========================
+University Scraper Report
+University name: TU Delft | Industrial Design Engineering
+University url: https://www.linkedin.com/school/idetudelft/people/
+
+SEED REPORT
+Found a total of 15 profiles in 0.9476299126942952 minutes:
+Nr of new profiles: 0
+Nr of profiles with a new title: 0
+Nr of already known profiles: 15
+Nr of errors: 0
+
+PRE SEED REPORT
+Found a total of 16 profiles in 0.9254879275957744 minutes:
+Nr of new profiles: 0
+Nr of profiles with a new title: 1
+Nr of already known profiles: 15
+Nr of errors: 0
+=========================
+
+=========================
+University Scraper Report
+University name: Erasmus University
+University url: https://www.linkedin.com/school/erasmus-university-rotterdam/people/
+
+SEED REPORT
+Found a total of 0 profiles in 0 minutes:
+Nr of new profiles: 0
+Nr of profiles with a new title: 0
+Nr of already known profiles: 0
+Nr of errors: 0
+
+PRE SEED REPORT
+Found a total of 36 profiles in 1.3824630657831827 minutes:
+Nr of new profiles: 0
+Nr of profiles with a new title: 1
+Nr of already known profiles: 35
+Nr of errors: 0
+=========================
+
+=========================
+University Scraper Report
+University name: Erasmus School of Accounting & Assurance
+University url: https://www.linkedin.com/school/erasmus-school-of-accounting-assurance-registercontroller/people/
+
+SEED REPORT
+Found a total of 0 profiles in 0.6854482293128967 minutes:
+Nr of new profiles: 0
+Nr of profiles with a new title: 0
+Nr of already known profiles: 0
+Nr of errors: 0
+
+PRE SEED REPORT
+Found a total of 4 profiles in 0.5945115645726522 minutes:
+Nr of new profiles: 0
+Nr of profiles with a new title: 0
+Nr of already known profiles: 4
+Nr of errors: 0
+=========================
+
+=========================
+University Scraper Report
+University name: Erasmus School of Philosophy
+University url: https://www.linkedin.com/company/erasmus-school-of-philosophy/people/
+
+SEED REPORT
+Found a total of 0 profiles in 0.021117575963338218 minutes:
+Nr of new profiles: 0
+Nr of profiles with a new title: 0
+Nr of already known profiles: 0
+Nr of errors: 0
+
+PRE SEED REPORT
+Found a total of 4 profiles in 0.5248798886934917 minutes:
+Nr of new profiles: 0
+Nr of profiles with a new title: 1
+Nr of already known profiles: 3
+Nr of errors: 0
+=========================
+
+=========================
+University Scraper Report
+University name: Erasmus School of History, Culture and Communication
+University url: https://www.linkedin.com/school/erasmus-school-of-history-culture-and-communication-eshcc/people/
+
+SEED REPORT
+Found a total of 0 profiles in 0.6801891644795736 minutes:
+Nr of new profiles: 0
+Nr of profiles with a new title: 0
+Nr of already known profiles: 0
+Nr of errors: 0
+
+PRE SEED REPORT
+Found a total of 4 profiles in 0.5060144305229187 minutes:
+Nr of new profiles: 0
+Nr of profiles with a new title: 0
+Nr of already known profiles: 4
+Nr of errors: 0
+=========================
+
+=========================
+University Scraper Report
+University name: Erasmus School of Social and Behavioural Sciences
+University url: https://www.linkedin.com/school/erasmus-school-of-social-and-behavioural-sciences-essb/people/
+
+SEED REPORT
+Found a total of 4 profiles in 0.5310121456782023 minutes:
+Nr of new profiles: 0
+Nr of profiles with a new title: 0
+Nr of already known profiles: 4
+Nr of errors: 0
+
+PRE SEED REPORT
+Found a total of 41 profiles in 0.6315992116928101 minutes:
+Nr of new profiles: 0
+Nr of profiles with a new title: 1
+Nr of already known profiles: 40
+Nr of errors: 0
+=========================
+
+=========================
+University Scraper Report
+University name: Erasmus School of Health Policy & Management
+University url: https://www.linkedin.com/company/erasmus-school-of-health-policy-&-management/people/
+
+SEED REPORT
+Found a total of 0 profiles in 0.01995154619216919 minutes:
+Nr of new profiles: 0
+Nr of profiles with a new title: 0
+Nr of already known profiles: 0
+Nr of errors: 0
+
+PRE SEED REPORT
+Found a total of 8 profiles in 0.5164185762405396 minutes:
+Nr of new profiles: 0
+Nr of profiles with a new title: 0
+Nr of already known profiles: 8
+Nr of errors: 0
+=========================
+
+=========================
+University Scraper Report
+University name: Erasmus School of Law
+University url: https://www.linkedin.com/school/erasmus-school-of-law/people/
+
+SEED REPORT
+Found a total of 0 profiles in 0 minutes:
+Nr of new profiles: 0
+Nr of profiles with a new title: 0
+Nr of already known profiles: 0
+Nr of errors: 0
+
+PRE SEED REPORT
+Found a total of 74 profiles in 0.48649640878041583 minutes:
+Nr of new profiles: 0
+Nr of profiles with a new title: 3
+Nr of already known profiles: 71
+Nr of errors: 0
+=========================
+
+=========================
+University Scraper Report
+University name: Erasmus School of Economics
+University url: https://www.linkedin.com/school/erasmus-school-of-economics/people/
+
+SEED REPORT
+Found a total of 81 profiles in 0.6128343900044759 minutes:
+Nr of new profiles: 34
+Nr of profiles with a new title: 3
+Nr of already known profiles: 44
+Nr of errors: 0
+
+PRE SEED REPORT
+Found a total of 95 profiles in 0.6905358314514161 minutes:
+Nr of new profiles: 52
+Nr of profiles with a new title: 2
+Nr of already known profiles: 41
+Nr of errors: 0
+=========================
+
+=========================
+University Scraper Report
+University name: Erasmus Rotterdam School of Management
+University url: https://www.linkedin.com/school/rotterdam-school-of-management-erasmus-university/people/
+
+SEED REPORT
+Found a total of 144 profiles in 0.7597131331761678 minutes:
+Nr of new profiles: 83
+Nr of profiles with a new title: 3
+Nr of already known profiles: 58
+Nr of errors: 0
+
+PRE SEED REPORT
+Found a total of 144 profiles in 0.7036417802174886 minutes:
+Nr of new profiles: 104
+Nr of profiles with a new title: 4
+Nr of already known profiles: 36
+Nr of errors: 0
+=========================
