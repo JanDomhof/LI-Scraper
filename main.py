@@ -68,7 +68,6 @@ while True:
             start_time = time.time()
             # Scrape uni for pre-seed
             uni_pre_seed = UNIPage(driver=driver, pre_seed=True, url=u.url, name=u.name)
-            driver.get(uni_pre_seed.url)
             uni_pre_seed.scrape()
             uni_pre_seed.persist()
             uni_pre_seed.close()
@@ -85,7 +84,6 @@ while True:
             # Scrape uni for seed
             uni_seed = UNIPage(driver=driver, pre_seed=False, url=u.url, name=u.name)
             if u.year_option:
-                driver.get(uni_seed.url)
                 uni_seed.scrape()
                 uni_seed.persist()
                 uni_seed.close()

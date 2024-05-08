@@ -162,32 +162,14 @@ class BasePage:
             scroll.move_to_element(element).perform()
         return element
     
-    def scrape_page(self, title, first):
-        title_field = self.wait_until_find(TUDelftResources.FunctionField, 10)
-        self.click(title_field)
-        self.send_keys(title_field, title).send_keys(Keys.ENTER)
-
-        try:
-            if first:
-                if self.pre_seed:
-                    start_year_field = self.wait_until_find(TUDelftResources.StartYearField, 3)
-                    self.click(start_year_field)
-                    self.send_keys(start_year_field, "2015").send_keys(Keys.ENTER)
-                else:
-                    end_year_field = self.wait_until_find(TUDelftResources.EndYearField, 3)
-                    self.click(end_year_field)
-                    self.send_keys(end_year_field, "2015").send_keys(Keys.ENTER)
-        except:
-            pass
-
-        for _ in range(5):
+    def scrape_page(self, n_iter):
+        for _ in range(n_iter):
             try:
                 show_more_button = self.wait_until_find(TUDelftResources.ShowMoreButton, 5)
                 self.scroll_to_element(show_more_button)
-                time.sleep(1)
             except:
                 break
-        try:        
+        try:
             self.founder_elements.extend(self.wait_until_find_all(TUDelftResources.Founder, 10))
         except:
             pass
@@ -197,15 +179,19 @@ class BasePage:
 
     def close(self):
         self.db.close()
+
+    def create_urls(self):
+        titles = ['founder', 'cto', 'cfo', 'ceo', 'oprichter', 'eigenaar', 'cso', 'co-founder']
+        base_url = self.url if self.url[-1] == '/' else self.url + '/'
+        urls = [base_url + f"?education{'Start' if self.pre_seed else 'End'}Year=2015&keywords={t}" for t in titles]
+        return urls
     
     def scrape(self):
-        titles = ['founder', 'cto', 'cfo', 'ceo', 'oprichter', 'eigenaar', 'cso', 'co-founder']
-        titles = ['founder', 'cto']
-        first = True
-        
-        for title in titles:
-            self.scrape_page(title, first)
-            first = False
+        urls = self.create_urls()
+
+        for url in urls:
+            self.driver.get(url)
+            self.scrape_page(n_iter=5)
 
             db_records = self.db.fetch_name_li_title()
 
@@ -219,7 +205,7 @@ class BasePage:
                     continue
                 self.report_total += 1
 
-                # if already found, skip
+                # if already found in this iteration, skip
                 name_already_found = current_founder in [f["Name"] for f in self.founders]
                 li_already_found = current_founder_li in [f["Linkedin"] for f in self.founders]
                 if name_already_found or li_already_found:
