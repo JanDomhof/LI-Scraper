@@ -191,7 +191,7 @@ class BasePage:
 
         for url in urls:
             self.driver.get(url)
-            self.scrape_page(n_iter=5)
+            self.scrape_page(n_iter=200)
 
             db_records = self.db.fetch_name_li_title()
 
