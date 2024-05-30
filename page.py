@@ -181,7 +181,7 @@ class BasePage:
         self.db.close()
 
     def create_urls(self):
-        titles = ['founder', 'cto', 'cfo', 'ceo', 'oprichter', 'eigenaar', 'cso', 'co-founder']
+        titles = ['founder', 'cto', 'cfo', 'ceo', 'oprichter', 'eigenaar', 'cso', 'co-founder', 'entrepreneur', 'chief', 'officer']
         base_url = self.url if self.url[-1] == '/' else self.url + '/'
         urls = [base_url + f"?education{'Start' if self.pre_seed else 'End'}Year=2015&keywords={t}" for t in titles]
         return urls

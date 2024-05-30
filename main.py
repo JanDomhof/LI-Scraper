@@ -10,7 +10,7 @@ load_dotenv()
 # Loop indefinately
 report_count = max([int(f.split(" ")[-1].split(".")[0]) for f in os.listdir("./reports")])
 while True:
-    start_time = time.time()
+    start_time_total = time.time()
     report_count += 1
     """
     STEP 0: Initialize driver
@@ -128,7 +128,7 @@ while True:
         report.write(f"Scraper report nr. {report_count}\n\n")
         report.write(f"Timestamp: {datetime.datetime.now().strftime('%c')}")
         report.write(f"""
-Found a total of {report_total} profiles in {(time.time() - start_time) / 60 / 60} hours:
+Found a total of {report_total} profiles in {(time.time() - start_time_total) / 60 / 60} hours:
 Nr of new profiles: {report_new}
 Nr of profiles with a new title: {report_new_title}
 Nr of already known profiles: {report_old}
