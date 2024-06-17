@@ -203,13 +203,14 @@ class BasePage:
                     current_founder_li = self.find_from_element(founder, TUDelftResources.FounderLink).get_attribute("href").split("?")[0]
                     current_founder_title = self.find_from_element(founder, TUDelftResources.FounderTitle).text.strip()
                 except:
+                    self.report_error += 1
                     continue
                 self.report_total += 1
 
                 # if already found in this iteration, skip
                 name_already_found = current_founder in [f["Name"] for f in self.founders]
                 li_already_found = current_founder_li in [f["Linkedin"] for f in self.founders]
-                if name_already_found or li_already_found:
+                if name_already_found or li_already_found or current_founder == "LinkedIn Member":
                     continue
                 
                 # check if name is already in db
