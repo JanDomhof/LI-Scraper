@@ -163,11 +163,12 @@ class BasePage:
         return element
     
     def scrape_page(self, n_iter):
-        for _ in range(n_iter):
+        for i in range(n_iter):
             try:
                 show_more_button = self.wait_until_find(TUDelftResources.ShowMoreButton, 5)
                 self.scroll_to_element(show_more_button)
             except:
+                print(f"Reached bottom in {i} scrolls")
                 break
         try:
             self.founder_elements.extend(self.wait_until_find_all(TUDelftResources.Founder, 10))
@@ -191,7 +192,7 @@ class BasePage:
 
         for url in urls:
             self.driver.get(url)
-            self.scrape_page(n_iter=200)
+            self.scrape_page(n_iter=5000)
 
             db_records = self.db.fetch_name_li_title()
 

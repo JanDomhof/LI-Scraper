@@ -1,0 +1,30 @@
+Scraper report nr. 29
+
+Timestamp: Wed Jun  5 13:23:42 2024
+Found a total of 0 profiles in 0.1403724327352312 hours:
+Nr of new profiles: 0
+Nr of profiles with a new title: 0
+Nr of already known profiles: 0
+Nr of errors: 0
+
+Below is a report for every UNI page:
+
+=========================
+University Scraper Report
+University name: TU Delft
+University url: https://www.linkedin.com/school/tudelft/people/
+
+SEED REPORT
+Found a total of 0 profiles in 0 minutes:
+Nr of new profiles: 0
+Nr of profiles with a new title: 0
+Nr of already known profiles: 0
+Nr of errors: 0
+
+PRE SEED REPORT
+Found a total of 0 profiles in 0 minutes:
+Nr of new profiles: 0
+Nr of profiles with a new title: 0
+Nr of already known profiles: 0
+Nr of errors: 0
+=========================
