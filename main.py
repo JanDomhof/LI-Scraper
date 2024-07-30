@@ -17,7 +17,7 @@ while True:
     """
     options = uc.ChromeOptions()
     options.headless = False
-    driver = uc.Chrome(options=options,version_main=124)
+    driver = uc.Chrome(options=options,version_main=126)
 
     """
     STEP 1: Login to LinkedIn
@@ -25,7 +25,7 @@ while True:
     login = LoginPage(driver, False)
     driver.get(login.url)
     login.login(os.environ["LI_USERNAME"], os.environ["LI_PASSWORD"])
-    
+    time.sleep(100)
     """
     STEP 2: UNIs list
     """

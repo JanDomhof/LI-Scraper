@@ -15,10 +15,10 @@ class Selector:
 
 
 class LoginPageResources:
-    URL = "https://nl.linkedin.com/"
-    UsernameField = Selector(By.XPATH, '//*[@id="session_key"]')
-    PasswordField = Selector(By.XPATH, '//*[@id="session_password"]')
-    LoginButton = Selector(By.XPATH, '//*[@data-id="sign-in-form__submit-btn"]')
+    URL = "https://www.linkedin.com/login?fromSignIn=true&trk=guest_homepage-basic_nav-header-signin"
+    UsernameField = Selector(By.XPATH, '//input[@id="username"]')
+    PasswordField = Selector(By.XPATH, '//input[@id="password"]')
+    LoginButton = Selector(By.XPATH, '//button[@aria-label="Sign in"]')
 
 class UniPageResources:
     FunctionField = Selector(By.XPATH, '//*[@id="people-search-keywords"]')
