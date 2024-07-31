@@ -200,9 +200,9 @@ class UNIPage (BasePage):
 
         self.pre_seed = pre_seed
         if pre_seed:
-            self.db.fetch_assignees(['Daan', 'Boaz', 'Ole', 'Jan', 'Tessa', 'Elsa', 'Robin', 'Rozanne', 'Sophie'])
+            self.assignees = self.db.fetch_assignees(['Daan', 'Boaz', 'Ole', 'Jan', 'Tessa', 'Elsa', 'Robin', 'Rozanne', 'Sophie'])
         else:
-            self.db.fetch_assignees(['Ileana', 'Jasper', 'Isabelle'])
+            self.assignees = self.db.fetch_assignees(['Ileana', 'Jasper', 'Isabelle'])
 
 
     # first, we make all url possibilities
