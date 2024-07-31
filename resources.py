@@ -30,6 +30,7 @@ class UniPageResources:
     FounderTitle = Selector(By.XPATH, './/*[contains(@class, "artdeco-entity-lockup__subtitle")]/div/div')
     FounderLink = Selector(By.XPATH, './/*[contains(@class, "app-aware-link")]')
     RemoveFilterButton = Selector(By.XPATH, '//button[contains(@aria-label, "Remove")]')
+    MemberCountField = Selector(By.XPATH, './/h2[@class="text-heading-xlarge"]')
 
 class TUDelftResources (UniPageResources):
     URL = "https://www.linkedin.com/school/tudelft/people/"

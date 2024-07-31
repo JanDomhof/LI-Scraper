@@ -1,0 +1,32 @@
+Scraper report nr. 45
+
+Timestamp: Wed Jul 31 10:26:18 2024
+
+| University Page Name                                 | Count on page   | Profiles found   | New   | New title   | Old   | Error   | Outside connection range   | Scrolls   |
+|------------------------------------------------------+-----------------+------------------+-------+-------------+-------+---------+----------------------------+-----------|
+| Erasmus School of Philosophy                         | 4               | 5                | 0     | 2           | 3     | 0       | 0                          | 0         |
+| Erasmus School of History, Culture and Communication | 5               | 5                | 0     | 0           | 5     | 0       | 0                          | 0         |
+| --- +                                                | --- +           | --- +            | --- + | --- +       | --- + | --- +   | --- +                      | --- +     |
+| TOTAL                                                | 9               | 10               | 0     | 2           | 8     | 0       | 0                          | 0         |
+
+
+Below is a report for every UNI page:
+
+Scraper Report for Page: Erasmus School of Philosophy
+
+| Keyword   | Count on page   | Profiles found   | New   | New title   | Old   | Error   | Outside connection range   | Scrolls   |
+|-----------+-----------------+------------------+-------+-------------+-------+---------+----------------------------+-----------|
+| founder   | 4               | 5                | 0     | 2           | 3     | 0       | 0                          | 0         |
+| cto       | 0               | 0                | 0     | 0           | 0     | 0       | 0                          | 0         |
+| --- +     | --- +           | --- +            | --- + | --- +       | --- + | --- +   | --- +                      | --- +     |
+| TOTAL     | 4               | 5                | 0     | 2           | 3     | 0       | 0                          | 0         |
+
+Scraper Report for Page: Erasmus School of History, Culture and Communication
+
+| Keyword   | Count on page   | Profiles found   | New   | New title   | Old   | Error   | Outside connection range   | Scrolls   |
+|-----------+-----------------+------------------+-------+-------------+-------+---------+----------------------------+-----------|
+| founder   | 5               | 5                | 0     | 0           | 5     | 0       | 0                          | 0         |
+| cto       | 0               | 0                | 0     | 0           | 0     | 0       | 0                          | 0         |
+| --- +     | --- +           | --- +            | --- + | --- +       | --- + | --- +   | --- +                      | --- +     |
+| TOTAL     | 5               | 5                | 0     | 0           | 5     | 0       | 0                          | 0         |
+

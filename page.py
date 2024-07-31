@@ -5,9 +5,10 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.common.keys import Keys
 
-from resources import Selector, LoginPageResources, TUDelftResources, EURResources
+from resources import Selector, LoginPageResources, TUDelftResources, EURResources, UniPageResources
 from typing import List
-import contextlib, pyautogui, random, time
+import contextlib, pyautogui, random, time, string, numpy as np
+from tabulate import tabulate
 
 from db import profiles_db
 from edda import Edda
@@ -21,30 +22,9 @@ class BasePage:
 
     page = BasePage(driver)
     """
-    def __init__(self, driver:Remote, pre_seed) -> None:
+    def __init__(self, driver:Remote) -> None:
         self.driver: Remote = driver
         self.driver.maximize_window()
-        self.db = profiles_db()
-        self.edda = Edda()
-        self.pre_seed = pre_seed
-        self.founder_elements = []
-
-        self.report_total = 0
-        self.report_new = 0
-        self.report_new_title = 0
-        self.report_old = 0
-        self.report_error = 0
-
-        if pre_seed:
-            names = ['Daan', 'Boaz', 'Ole', 'Jan', 'Tessa', 'Elsa', 'Robin', 'Rozanne', 'Sophie']
-        else:
-            names = ['Ileana', 'Jasper', 'Isabelle']
-
-        self.assignees = self.db.fetch_assignees(names)
-        self.founders = []
-
-
-
 
     def find(self, selector: Selector) -> WebElement:
         """This method will find and return an element from the driver"""
@@ -163,17 +143,24 @@ class BasePage:
         return element
     
     def scrape_page(self, n_iter):
+        scrolls = 0
         for i in range(n_iter):
             try:
+                # if you scroll to the bottom of the page, a new batch of profiles will load
                 show_more_button = self.wait_until_find(TUDelftResources.ShowMoreButton, 5)
                 self.scroll_to_element(show_more_button)
             except:
-                print(f"Reached bottom in {i} scrolls")
+                # if we are at the bottom, we save the amount of scrolls it took
+                scrolls = i
                 break
+
         try:
-            self.founder_elements.extend(self.wait_until_find_all(TUDelftResources.Founder, 10))
-        except:
-            pass
+            # after scrolling to the bottom, we return all the founders on the page
+            return self.wait_until_find_all(TUDelftResources.Founder, 10), scrolls
+        except Exception as e:
+            # if something goes wrong, print the error
+            print(e)
+            return [], 0
 
     def persist(self):
         self.db.insert(self.founders)
@@ -181,84 +168,9 @@ class BasePage:
     def close(self):
         self.db.close()
 
-    def create_urls(self):
-        titles = ['founder', 'cto', 'cfo', 'ceo', 'oprichter', 'eigenaar', 'cso', 'co-founder', 'entrepreneur', 'chief', 'officer']
-        base_url = self.url if self.url[-1] == '/' else self.url + '/'
-        urls = [base_url + f"?education{'Start' if self.pre_seed else 'End'}Year=2015&keywords={t}" for t in titles]
-        return urls
-    
-    def scrape(self):
-        urls = self.create_urls()
-
-        for url in urls:
-            self.driver.get(url)
-            self.scrape_page(n_iter=5000)
-
-            db_records = self.db.fetch_name_li_title()
-
-            for founder in self.founder_elements:
-                # get name, linkedin, title to check for duplicates
-                try:
-                    current_founder = self.find_from_element(founder, TUDelftResources.FounderName).text.strip()
-                    current_founder_li = self.find_from_element(founder, TUDelftResources.FounderLink).get_attribute("href").split("?")[0]
-                    current_founder_title = self.find_from_element(founder, TUDelftResources.FounderTitle).text.strip()
-                except:
-                    self.report_error += 1
-                    continue
-                self.report_total += 1
-
-                # if already found in this iteration, skip
-                name_already_found = current_founder in [f["Name"] for f in self.founders]
-                li_already_found = current_founder_li in [f["Linkedin"] for f in self.founders]
-                if name_already_found or li_already_found or current_founder == "LinkedIn Member":
-                    continue
-                
-                # check if name is already in db
-                if db_records['Name'].str.contains(current_founder).any() or db_records['Linkedin'].str.contains(current_founder_li).any():
-                    # if title has changed, change title and set checked to 0
-                    if not db_records.loc[db_records['Name'] == current_founder]['Title'].str.contains(current_founder_title).any():
-                        self.db.update_title(current_founder, current_founder_title)
-                        self.report_new_title += 1
-                    else:
-                        self.report_old += 1
-                    continue
-                
-                # if not in db, try to fetch all data and create new founder
-                try:
-                    self.founders.append({
-                        "Name": current_founder,
-                        "Linkedin": current_founder_li,
-                        "Title": current_founder_title,
-                        "University": self.uni,
-                        "Year": None,
-                        "TitleIndicatesFounder": 1 if self.check_if_founder(self.find_from_element(founder, TUDelftResources.FounderTitle).text.lower().strip()) else 0,
-                        "InEdda": 0,
-                        "MatchingEddaWord": "",
-                        "Assignee": min(self.assignees, key=self.assignees.get),
-                        "Checked": 0,
-                        "AddedToEdda": 0,
-                        "Vertical": None
-                    })
-                    self.report_new += 1
-                    self.assignees[min(self.assignees, key=self.assignees.get)] += 1
-                except Exception as e:
-                    print(e)
-                    self.report_error += 1
-                    continue
-                
-            self.founder_elements = []
-            remove_filter_button = self.wait_until_find(TUDelftResources.RemoveFilterButton, 10)
-            self.scroll_to_element(remove_filter_button)
-            self.click(remove_filter_button)
-
-    def check_if_founder(self, title) -> bool:
-        bad_keyword_found = any(keyword in title for keyword in['consultant', 'consultancy', 'consulting', 'consult', 'consultation', 'strategy', 'strategic', 'art', 'arts', 'design', 'designer', 'studio', 'architect', 'architecture', 'law', 'lawyer'])
-        good_keyword_found = any(keyword in title for keyword in['founder', 'eigenaar', 'oprichter', 'cto', 'cfo', 'ceo'])
-        return False if bad_keyword_found else good_keyword_found
-
 class LoginPage (BasePage):
-    def __init__(self, driver: Remote, pre_seed) -> None:
-        super().__init__(driver, pre_seed)
+    def __init__(self, driver: Remote) -> None:
+        super().__init__(driver)
         self.url = LoginPageResources.URL
 
     def login(self, email: str, password: str):  
@@ -277,20 +189,196 @@ class LoginPage (BasePage):
 
         return self
 
-class TUPage (BasePage):
-    def __init__(self, driver: Remote, pre_seed) -> None:
-        super().__init__(driver, pre_seed)
-        self.url = TUDelftResources.URL
-        self.uni = "TU Delft"
-
-class EURPage (BasePage):
-    def __init__(self, driver: Remote, pre_seed) -> None:
-        super().__init__(driver, pre_seed)
-        self.url = EURResources.URL
-        self.uni = "Erasmus University Rotterdam"
-
 class UNIPage (BasePage):
     def __init__(self, driver: Remote, pre_seed, url, name) -> None:
-        super().__init__(driver, pre_seed)
+        super().__init__(driver)
         self.url = url
         self.uni = name
+        self.db = profiles_db()
+        self.edda = Edda()
+        self.reports = []
+
+        self.pre_seed = pre_seed
+        if pre_seed:
+            self.db.fetch_assignees(['Daan', 'Boaz', 'Ole', 'Jan', 'Tessa', 'Elsa', 'Robin', 'Rozanne', 'Sophie'])
+        else:
+            self.db.fetch_assignees(['Ileana', 'Jasper', 'Isabelle'])
+
+
+    # first, we make all url possibilities
+    # in these url's, you can already apply filters (e.g., keyword or start/end year)
+    # most efficient way of filtering
+    def create_urls(self):
+        titles = ['founder', 'cto', 'cfo', 'ceo', 'oprichter', 'eigenaar', 'cso', 'co-founder', 'entrepreneur', 'chief', 'officer']
+        titles = ['founder', 'cto']
+        base_url = self.url if self.url[-1] == '/' else self.url + '/'
+        urls = [base_url + f"?education{'Start' if self.pre_seed else 'End'}Year=2015&keywords={t}" for t in titles]
+        return urls
+    
+    # strange looking function but it works. It removes all punctuation from a string.
+    # this is used on the names and titles of linkedin profiles since some people have smileys or 
+    # special characters that break the code when we make a query to the database.
+    def remove_punctuation(self, text):
+        return text.translate(str.maketrans(string.punctuation, ",,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,")).replace(",", "")
+    
+    def scrape(self):
+        # first, we make all url possibilities
+        # in these url's, you can already apply filters (e.g., keyword or start/end year)
+        urls = self.create_urls()
+
+        for url in urls:
+            # fetch the page
+            self.driver.get(url)
+
+            # see how many profiles there are in this filter
+            member_count = int(self.wait_until_find(UniPageResources.MemberCountField).text.strip().split(' ')[0])
+
+            # scrape the page
+            founder_elements, scrolls = self.scrape_page(n_iter=5)
+
+            # fetch all names and titles from the database
+            db_records = self.db.fetch_name_li_title()
+
+            # define founder list and counts for this batch
+            batch_founders_list = []
+            batch_total = len(founder_elements)
+            batch_new = 0
+            batch_new_title = 0
+            batch_old = 0
+            batch_error = 0
+            batch_fouth_connection = 0
+
+            # for every profile we have found during scraping
+            for founder in founder_elements:
+                # get name, linkedin, title
+                name = self.remove_punctuation(self.find_from_element(founder, TUDelftResources.FounderName).text.strip())
+                linkedin = self.find_from_element(founder, TUDelftResources.FounderLink).get_attribute("href").split("?")[0]
+                title = self.remove_punctuation(self.find_from_element(founder, TUDelftResources.FounderTitle).text.strip())
+                # try:
+                
+                # # if something goes wrong in fetching the above, we add 1 to the error counter and move to the next profile
+                # except:
+                #     batch_error += 1
+                #     continue
+                
+                # if we cannot view the name of this person (i.e. 4+ cirkel connectie waardoor hij 'LinkedIn Member' als naam heeft)
+                if (
+                        name == "LinkedIn Member"
+                    ):
+                    batch_fouth_connection += 1
+                    continue
+
+                # if the name of linkedin are already in the db, we have found a 'known' profile
+                if (   
+                        db_records['Name'].str.contains(name).any() or
+                        db_records['Linkedin'].str.contains(linkedin).any()
+                    ):
+                    # if title has changed, the profile might have changed job or positions (might be a new founder!!)
+                    # if so, we change the title and set checked to 0 so that it reappears in the scrape tool
+                    if (
+                            not db_records.loc[db_records['Name'] == name]['Title'].str.contains(title).any()
+                        ):
+                        self.db.update_title(name, title)
+                        batch_new_title += 1
+
+                    # if title has not changed, we already know this profile, so we add 1 to the old profile counter
+                    else:
+                        batch_old += 1
+
+                    # we don't have to do anything else (either it is old, or we have updated the entry with the new title)
+                    # so we continue to the next founder
+                    continue
+
+                # Since we have reached this part in the code we know 2 things:
+                #   - the founder name and title were not already found in this batch
+                #   - the founder name and title were not already in our database
+                # 
+                # So we found a new profile!!! We try to fetch all data and create new founder.
+                    batch_founders_list.append({
+                        "Name": name,
+                        "Linkedin": linkedin,
+                        "Title": title,
+                        "University": self.uni,
+                        "Year": None, # deze moet eigenlijk weg, hebben niet echt een manier om dit te checken
+                        "TitleIndicatesFounder": 1 if self.check_if_founder(self.find_from_element(founder, TUDelftResources.FounderTitle).text.lower().strip()) else 0,
+                        "InEdda": 0, # deze moet nog geimplementeerd worden, zou kunnen door van elk bedrijf in edda de 'Founder' text field te getten en checken of de naam van deze founder daar in zit.
+                        "MatchingEddaWord": "", # kan alleen als deze hierboven is gefixt (dan moet dit de naam van de startup zijn)
+                        "Assignee": min(self.assignees, key=self.assignees.get),
+                        "Checked": 0,
+                        "AddedToEdda": 0,
+                        "Vertical": None
+                    })
+                try:
+
+                    # if we reach this part in the code, we know that:
+                    #   - all the necessary information has been found succesfully
+                    #   - a founder object has been created
+                    # 
+                    # so we can add 1 to the 'new founders' count and add a to the assignee counter (for workload distribution)
+                    batch_new += 1
+                    self.assignees[min(self.assignees, key=self.assignees.get)] += 1
+
+                # if something went wrong with fetching the information above, there was an error.
+                # we print the error so we can check later and add 1 to the error counter.
+                except Exception as e:
+                    print(e)
+                    batch_error += 1
+                    continue
+
+            # persist these entries in the database and continue to the next url / filter
+            self.db.insert(batch_founders_list)
+
+            # create report for this filter for this uni page
+            self.reports.append(
+                [
+                    url.split('=')[-1],
+                    member_count,
+                    batch_total,
+                    batch_new,
+                    batch_new_title,
+                    batch_old,
+                    batch_error,
+                    batch_fouth_connection,
+                    scrolls
+                ]
+            )
+
+            # this is for checking the terminal while the code is running (as you cannot see the report yet)
+            print(self.get_report())
+
+    def check_if_founder(self, title) -> bool:
+        # these keywords are usually not founders
+        bad_keyword_found = any(keyword in title for keyword in['consultant', 'consultancy', 'consulting', 'consult', 'consultation', 'strategy', 'strategic', 'art', 'arts', 'design', 'designer', 'studio', 'architect', 'architecture', 'law', 'lawyer'])
+        
+        # these keywords are usually founders
+        good_keyword_found = any(keyword in title for keyword in['founder', 'eigenaar', 'oprichter', 'cto', 'cfo', 'ceo'])
+        
+        return False if bad_keyword_found else good_keyword_found
+    
+    def get_report_table(self):
+        # we want to know the total report of this scraper, so we must sum over the columns
+        # problem is... the first column is type string, so therefore the entire array is type string
+        # delete first column (which is string) and convert the rest to integers
+        
+        # turn report into numpy array and delete the first 'string' column, and take the sums
+        report_table = self.reports.copy()
+        table = np.array(report_table)
+        int_table = np.delete(table, [0], axis=1).astype(int)
+        sums = np.sum(int_table, axis=0)
+        
+        # create new row for total scores and add the column sums
+        total_row = ['TOTAL']
+        total_row.extend(sums)
+
+        # add a row that indicates a seperation and then the TOTAL row
+        report_table.append(['--- +','--- +','--- +','--- +','--- +','--- +','--- +','--- +','--- +'])
+        report_table.append(total_row)
+
+        return report_table
+    
+    def get_report(self):
+        # create a string with the report and return
+        s = f"Scraper Report for Page: {self.uni}\n\n"
+        s += tabulate(self.get_report_table(), headers=['Keyword', 'Count on page', 'Profiles found', 'New', 'New title', 'Old', 'Error', 'Outside connection range', 'Scrolls'], tablefmt='orgtbl')
+        return s
+
