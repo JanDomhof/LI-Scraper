@@ -29,7 +29,6 @@ while True:
     login = LoginPage(driver)
     driver.get(login.url)
     login.login(os.environ["LI_USERNAME"], os.environ["LI_PASSWORD"])
-    time.sleep(10)
 
     """
     STEP 2: UNIs list

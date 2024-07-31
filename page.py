@@ -187,7 +187,9 @@ class LoginPage (BasePage):
         login_button = self.wait_until_find(LoginPageResources.LoginButton, 10)
         self.click(login_button)
 
-        return self
+        self.wait_until_find(LoginPageResources.ProfilePicture, 100)
+        print("Logged in!")
+
 
 class UNIPage (BasePage):
     def __init__(self, driver: Remote, pre_seed, url, name) -> None:

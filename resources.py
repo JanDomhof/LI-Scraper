@@ -19,6 +19,7 @@ class LoginPageResources:
     UsernameField = Selector(By.XPATH, '//input[@id="username"]')
     PasswordField = Selector(By.XPATH, '//input[@id="password"]')
     LoginButton = Selector(By.XPATH, '//button[@aria-label="Sign in"]')
+    ProfilePicture = Selector(By.XPATH, '//*[contains(@class, "render-mode-BIGPIPE")]')
 
 class UniPageResources:
     FunctionField = Selector(By.XPATH, '//*[@id="people-search-keywords"]')
