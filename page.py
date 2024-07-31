@@ -231,7 +231,7 @@ class UNIPage (BasePage):
             self.driver.get(url)
 
             # see how many profiles there are in this filter
-            member_count = int(self.wait_until_find(UniPageResources.MemberCountField).text.strip().split(' ')[0])
+            member_count = int(self.remove_punctuation(self.wait_until_find(UniPageResources.MemberCountField).text.strip().split(' ')[0]))
 
             # scrape the page
             founder_elements, scrolls = self.scrape_page(n_iter=5)

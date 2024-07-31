@@ -84,11 +84,11 @@ while True:
     STEP 3: SCRAPE!!!
     """
     for u in unis:
-        try:
-            u.scrape()
-            u.close()
-        except Exception as e:
-            print(f"Error with scraper for {u.name}:\n{e.__traceback__}")
+        u.scrape()
+        u.close()
+        # try:
+        # except Exception as e:
+        #     print(f"Error with scraper for {u.uni}:\n{e}")
 
 
     """
