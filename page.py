@@ -251,15 +251,14 @@ class UNIPage (BasePage):
             # for every profile we have found during scraping
             for founder in founder_elements:
                 # get name, linkedin, title
-                name = self.remove_punctuation(self.find_from_element(founder, TUDelftResources.FounderName).text.strip())
-                linkedin = self.find_from_element(founder, TUDelftResources.FounderLink).get_attribute("href").split("?")[0]
-                title = self.remove_punctuation(self.find_from_element(founder, TUDelftResources.FounderTitle).text.strip())
-                # try:
-                
-                # # if something goes wrong in fetching the above, we add 1 to the error counter and move to the next profile
-                # except:
-                #     batch_error += 1
-                #     continue
+                try:
+                    name = self.remove_punctuation(self.find_from_element(founder, TUDelftResources.FounderName).text.strip())
+                    linkedin = self.find_from_element(founder, TUDelftResources.FounderLink).get_attribute("href").split("?")[0]
+                    title = self.remove_punctuation(self.find_from_element(founder, TUDelftResources.FounderTitle).text.strip())
+                # if something goes wrong in fetching the above, we add 1 to the error counter and move to the next profile
+                except:
+                    batch_error += 1
+                    continue
                 
                 # if we cannot view the name of this person (i.e. 4+ cirkel connectie waardoor hij 'LinkedIn Member' als naam heeft)
                 if (
@@ -294,6 +293,7 @@ class UNIPage (BasePage):
                 #   - the founder name and title were not already in our database
                 # 
                 # So we found a new profile!!! We try to fetch all data and create new founder.
+                try:
                     batch_founders_list.append({
                         "Name": name,
                         "Linkedin": linkedin,
@@ -308,7 +308,6 @@ class UNIPage (BasePage):
                         "AddedToEdda": 0,
                         "Vertical": None
                     })
-                try:
 
                     # if we reach this part in the code, we know that:
                     #   - all the necessary information has been found succesfully
