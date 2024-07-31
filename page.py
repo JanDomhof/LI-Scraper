@@ -210,7 +210,6 @@ class UNIPage (BasePage):
     # most efficient way of filtering
     def create_urls(self):
         titles = ['founder', 'cto', 'cfo', 'ceo', 'oprichter', 'eigenaar', 'cso', 'co-founder', 'entrepreneur', 'chief', 'officer']
-        titles = ['founder', 'cto']
         base_url = self.url if self.url[-1] == '/' else self.url + '/'
         urls = [base_url + f"?education{'Start' if self.pre_seed else 'End'}Year=2015&keywords={t}" for t in titles]
         return urls
@@ -234,7 +233,7 @@ class UNIPage (BasePage):
             member_count = int(self.remove_punctuation(self.wait_until_find(UniPageResources.MemberCountField).text.strip().split(' ')[0]))
 
             # scrape the page
-            founder_elements, scrolls = self.scrape_page(n_iter=5)
+            founder_elements, scrolls = self.scrape_page(n_iter=5000)
 
             # fetch all names and titles from the database
             db_records = self.db.fetch_name_li_title()
