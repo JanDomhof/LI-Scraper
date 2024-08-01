@@ -325,8 +325,10 @@ class UNIPage (BasePage):
                     batch_error += 1
                     continue
 
+            # if we have found a new profile:
             # persist these entries in the database and continue to the next url / filter
-            self.db.insert(batch_founders_list)
+            if batch_new > 0:
+                self.db.insert(batch_founders_list)
 
             # create report for this filter for this uni page
             self.reports.append(
