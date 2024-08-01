@@ -351,7 +351,7 @@ class UNIPage (BasePage):
         bad_keyword_found = any(keyword in title for keyword in['consultant', 'consultancy', 'consulting', 'consult', 'consultation', 'strategy', 'strategic', 'art', 'arts', 'design', 'designer', 'studio', 'architect', 'architecture', 'law', 'lawyer'])
         
         # these keywords are usually founders
-        good_keyword_found = any(keyword in title for keyword in['founder', 'eigenaar', 'oprichter', 'cto', 'cfo', 'ceo'])
+        good_keyword_found = any(keyword in title for keyword in['founder', 'eigenaar', 'oprichter', 'cto', 'cfo', 'ceo', 'co-founder', 'cso', 'entrepreneur', 'co-owner', 'owner', 'building', 'build', 'builder', 'residence', 'stealth', 'working'])
         
         return False if bad_keyword_found else good_keyword_found
     
