@@ -362,9 +362,12 @@ class UNIPage (BasePage):
         
         # turn report into numpy array and delete the first 'string' column, and take the sums
         report_table = self.reports.copy()
-        table = np.array(report_table)
-        int_table = np.delete(table, [0], axis=1).astype(int)
-        sums = np.sum(int_table, axis=0)
+        if len(report_table) > 1:
+            table = np.array(report_table)
+            int_table = np.delete(table, [0], axis=1).astype(int)
+            sums = np.sum(int_table, axis=0)
+        else:
+            sums = report_table
         
         # create new row for total scores and add the column sums
         total_row = ['TOTAL']
