@@ -6,6 +6,9 @@ load_dotenv()
 
 class profiles_db:
     def __init__(self) -> None:
+        self.open_connection()
+
+    def open_connection(self):
         self.mysql = sql.connect(database="graduate_db", user=os.environ["DB_USERNAME"],
                                     password=os.environ["DB_PASSWORD"],
                                     host="graduateentrepreneurserver.mysql.database.azure.com", port=3306,

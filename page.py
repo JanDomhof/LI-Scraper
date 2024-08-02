@@ -162,9 +162,6 @@ class BasePage:
             print(e)
             return [], 0
 
-    def persist(self):
-        self.db.insert(self.founders)
-
     def close(self):
         self.db.close()
 
@@ -250,7 +247,12 @@ class UNIPage (BasePage):
             founder_elements, scrolls = self.scrape_page(n_iter=5000)
 
             # fetch all names and titles from the database
-            db_records = self.db.fetch_name_li_title()
+            try:
+                db_records = self.db.fetch_name_li_title()
+            except:
+                # if fails, reopen connection and do again
+                self.db.open_connection()
+                db_records = self.db.fetch_name_li_title()
 
             # define founder list and counts for this batch
             batch_founders_list = []
@@ -290,8 +292,14 @@ class UNIPage (BasePage):
                     if (
                             not db_records.loc[db_records['Name'] == name]['Title'].str.contains(title).any()
                         ):
-                        self.db.update_title(name, title)
-                        batch_new_title += 1
+                        try:
+                            self.db.update_title(name, title)
+                        except:
+                            # if fails, reopen connection and try again
+                            self.db.open_connection()
+                            self.db.update_title(name, title)
+                        finally:
+                            batch_new_title += 1
 
                     # if title has not changed, we already know this profile, so we add 1 to the old profile counter
                     else:
@@ -340,7 +348,11 @@ class UNIPage (BasePage):
             # if we have found a new profile:
             # persist these entries in the database and continue to the next url / filter
             if batch_new > 0:
-                self.db.insert(batch_founders_list)
+                try:
+                    self.db.insert(batch_founders_list)
+                except:
+                    self.db.open_connection()
+                    self.db.insert(batch_founders_list)
 
             # create report for this filter for this uni page
             self.reports.append(
