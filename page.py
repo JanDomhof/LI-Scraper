@@ -210,10 +210,15 @@ class UNIPage (BasePage):
     # first, we make all url possibilities
     # in these url's, you can already apply filters (e.g., keyword or start/end year)
     # most efficient way of filtering
-    def create_urls(self):
+    def create_urls(self, use_filters=True):
         titles = ['founder', 'cto', 'cfo', 'ceo', 'oprichter', 'eigenaar', 'cso', 'co-founder', 'entrepreneur', 'chief', 'officer']
         base_url = self.url if self.url[-1] == '/' else self.url + '/'
-        urls = [base_url + f"?education{'Start' if self.pre_seed else 'End'}Year=2015&keywords={t}" for t in titles]
+        
+        # for small pages (<1000 employees) we don't filter on the results, but we just go through the whole page
+        if use_filters:
+            urls = [base_url + f"?education{'Start' if self.pre_seed else 'End'}Year=2015&keywords={t}" for t in titles]
+        else:
+            urls = [base_url]
         return urls
     
     # strange looking function but it works. It removes all punctuation from a string.
@@ -223,9 +228,16 @@ class UNIPage (BasePage):
         return text.translate(str.maketrans(string.punctuation, ",,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,")).replace(",", "")
     
     def scrape(self):
+        # first we check how many alumni the page has. If that is less than 1000,
+        # we don't have to filter on the results since we can view all the members by just scrolling down the page
+        # This saves quite some time when scraping almost empty pages
+        self.driver.get(self.url)
+        alumni_count = int(self.remove_punctuation(self.wait_until_find(UniPageResources.MemberCountField).text.strip().split(' ')[0]))
+        use_filters = alumni_count >= 1000
+
         # first, we make all url possibilities
         # in these url's, you can already apply filters (e.g., keyword or start/end year)
-        urls = self.create_urls()
+        urls = self.create_urls(use_filters)
 
         for url in urls:
             # fetch the page
@@ -325,13 +337,15 @@ class UNIPage (BasePage):
                     batch_error += 1
                     continue
 
+            # if we have found a new profile:
             # persist these entries in the database and continue to the next url / filter
-            self.db.insert(batch_founders_list)
+            if batch_new > 0:
+                self.db.insert(batch_founders_list)
 
             # create report for this filter for this uni page
             self.reports.append(
                 [
-                    url.split('=')[-1],
+                    url.split('=')[-1] if "=" in url else "No filter used",
                     member_count,
                     batch_total,
                     batch_new,
@@ -384,4 +398,3 @@ class UNIPage (BasePage):
         s = f"Scraper Report for Page: {self.uni}\n\n"
         s += tabulate(self.get_report_table(), headers=['Keyword', 'Count on page', 'Profiles found', 'New', 'New title', 'Old', 'Error', 'Outside connection range', 'Scrolls'], tablefmt='orgtbl')
         return s
-
