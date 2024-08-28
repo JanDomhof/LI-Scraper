@@ -236,7 +236,7 @@ class UNIPage (BasePage):
             member_count = int(self.remove_punctuation(self.wait_until_find(UniPageResources.MemberCountField).text.strip().split(' ')[0]))
 
             # scrape the page
-            founder_elements, scrolls = self.scrape_page(n_iter=10)
+            founder_elements, scrolls = self.scrape_page(n_iter=200)
 
             # fetch all names and titles from the database
             try:
@@ -371,7 +371,7 @@ class UNIPage (BasePage):
         bad_keyword_found = any(keyword in title for keyword in['consultant', 'consultancy', 'consulting', 'consult', 'consultation', 'strategy', 'strategic', 'art', 'arts', 'design', 'designer', 'studio', 'architect', 'architecture', 'law', 'lawyer'])
         
         # these keywords are usually founders
-        good_keyword_found = any(keyword in title for keyword in['founder', 'eigenaar', 'oprichter', 'cto', 'cfo', 'ceo', 'co-founder', 'cso', 'entrepreneur', 'co-owner', 'owner', 'building', 'build', 'builder', 'residence', 'stealth', 'working'])
+        good_keyword_found = any(keyword in title for keyword in['founder', 'eigenaar', 'oprichter', 'cto', 'cfo', 'ceo', 'co-founder', 'cofounder', 'cso', 'entrepreneur', 'co-owner', 'owner', 'building', 'build', 'builder', 'residence', 'stealth', 'working'])
         
         return False if bad_keyword_found else good_keyword_found
     
@@ -411,7 +411,6 @@ class BigUNIPage (UNIPage):
     # 2nd: we filter on start and end year to find segments that do not result in more than 1000 results (since that is the limit that linkedin shows on the page)
     def create_urls(self, use_filters=True):
         titles = ['founder', 'cto', 'cfo', 'ceo', 'oprichter', 'eigenaar', 'cso', 'co-founder', 'entrepreneur', 'chief', 'officer', 'builder', 'building']
-        titles = ['founder', 'cto', 'ceo']
         base_url = self.url if self.url[-1] == '/' else self.url + '/'
         
         year_segments = [1980, 1985, 1989, 1992, 1995, 1998, 2001, 2004, 2007, 2010, 2013, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025]
