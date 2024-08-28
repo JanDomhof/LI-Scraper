@@ -187,7 +187,6 @@ class LoginPage (BasePage):
         self.wait_until_find(LoginPageResources.ProfilePicture, 100)
         print("Logged in!")
 
-
 class UNIPage (BasePage):
     def __init__(self, driver: Remote, pre_seed, url, name) -> None:
         super().__init__(driver)
@@ -208,15 +207,8 @@ class UNIPage (BasePage):
     # in these url's, you can already apply filters (e.g., keyword or start/end year)
     # most efficient way of filtering
     def create_urls(self, use_filters=True):
-        titles = ['founder', 'cto', 'cfo', 'ceo', 'oprichter', 'eigenaar', 'cso', 'co-founder', 'entrepreneur', 'chief', 'officer']
         base_url = self.url if self.url[-1] == '/' else self.url + '/'
-        
-        # for small pages (<1000 employees) we don't filter on the results, but we just go through the whole page
-        if use_filters:
-            urls = [base_url + f"?education{'Start' if self.pre_seed else 'End'}Year=2015&keywords={t}" for t in titles]
-        else:
-            urls = [base_url]
-        return urls
+        return [base_url]
     
     # strange looking function but it works. It removes all punctuation from a string.
     # this is used on the names and titles of linkedin profiles since some people have smileys or 
@@ -244,7 +236,7 @@ class UNIPage (BasePage):
             member_count = int(self.remove_punctuation(self.wait_until_find(UniPageResources.MemberCountField).text.strip().split(' ')[0]))
 
             # scrape the page
-            founder_elements, scrolls = self.scrape_page(n_iter=5000)
+            founder_elements, scrolls = self.scrape_page(n_iter=10)
 
             # fetch all names and titles from the database
             try:
@@ -282,22 +274,22 @@ class UNIPage (BasePage):
                     batch_fouth_connection += 1
                     continue
 
-                # if the name of linkedin are already in the db, we have found a 'known' profile
+                # if this linkedin profile is already in the db, we have found a 'known' profile
                 if (   
-                        db_records['Name'].str.contains(name).any() or
                         db_records['Linkedin'].str.contains(linkedin).any()
                     ):
-                    # if title has changed, the profile might have changed job or positions (might be a new founder!!)
+                    # if name or title has changed, the profile might have changed job or positions (might have become a founder recently!!)
                     # if so, we change the title and set checked to 0 so that it reappears in the scrape tool
                     if (
-                            not db_records.loc[db_records['Name'] == name]['Title'].str.contains(title).any()
+                            not name == self.db.fetch_name(linkedin) or
+                            not title == self.db.fetch_title(linkedin)
                         ):
                         try:
-                            self.db.update_title(name, title)
+                            self.db.update_record(name, title, linkedin)
                         except:
                             # if fails, reopen connection and try again
                             self.db.open_connection()
-                            self.db.update_title(name, title)
+                            self.db.update_record(name, title, linkedin)
                         finally:
                             batch_new_title += 1
 
@@ -357,7 +349,9 @@ class UNIPage (BasePage):
             # create report for this filter for this uni page
             self.reports.append(
                 [
-                    url.split('=')[-1] if "=" in url else "No filter used",
+                    url.split('=')[-1] if "=" in url else "No filter used", # keyword
+                    url.split('=')[2][0:4], # start year
+                    url.split('=')[1][0:4], # end year
                     member_count,
                     batch_total,
                     batch_new,
@@ -388,19 +382,16 @@ class UNIPage (BasePage):
         
         # turn report into numpy array and delete the first 'string' column, and take the sums
         report_table = self.reports.copy()
-        if len(report_table) > 1:
-            table = np.array(report_table)
-            int_table = np.delete(table, [0], axis=1).astype(int)
-            sums = np.sum(int_table, axis=0)
-        else:
-            sums = report_table
+        table = np.array(report_table)
+        int_table = np.delete(table, [0], axis=1).astype(int)
+        sums = np.sum(int_table, axis=0)
         
         # create new row for total scores and add the column sums
         total_row = ['TOTAL']
         total_row.extend(sums)
 
         # add a row that indicates a seperation and then the TOTAL row
-        report_table.append(['--- +','--- +','--- +','--- +','--- +','--- +','--- +','--- +','--- +'])
+        report_table.append(['--- +','--- +', '--- +','--- +','--- +','--- +','--- +','--- +','--- +','--- +','--- +'])
         report_table.append(total_row)
 
         return report_table
@@ -408,5 +399,25 @@ class UNIPage (BasePage):
     def get_report(self):
         # create a string with the report and return
         s = f"Scraper Report for Page: {self.uni}\n\n"
-        s += tabulate(self.get_report_table(), headers=['Keyword', 'Count on page', 'Profiles found', 'New', 'New title', 'Old', 'Error', 'Outside connection range', 'Scrolls'], tablefmt='orgtbl')
+        s += tabulate(self.get_report_table(), headers=['Keyword', 'Start Year', 'End Year', 'Count on page', 'Profiles found', 'New', 'New title', 'Old', 'Error', 'Outside connection range', 'Scrolls'], tablefmt='orgtbl')
         return s
+
+class BigUNIPage (UNIPage):
+    def __init__(self, driver: Remote, pre_seed, url, name) -> None:
+        super().__init__(driver, pre_seed, url, name)
+    
+    # since there are many profiles, we must filter them to make sure we find the correct profiles
+    # 1st: we filter on titles that often correspond with founders
+    # 2nd: we filter on start and end year to find segments that do not result in more than 1000 results (since that is the limit that linkedin shows on the page)
+    def create_urls(self, use_filters=True):
+        titles = ['founder', 'cto', 'cfo', 'ceo', 'oprichter', 'eigenaar', 'cso', 'co-founder', 'entrepreneur', 'chief', 'officer', 'builder', 'building']
+        titles = ['founder', 'cto', 'ceo']
+        base_url = self.url if self.url[-1] == '/' else self.url + '/'
+        
+        year_segments = [1980, 1985, 1989, 1992, 1995, 1998, 2001, 2004, 2007, 2010, 2013, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025]
+        urls = []
+        for t in titles:
+            for i in range(len(year_segments)-1):
+                urls.append(base_url + f"?educationEndYear={year_segments[i+1]}&educationStartYear={year_segments[i]}&keywords={t}")
+
+        return urls

@@ -46,8 +46,8 @@ class profiles_db:
         self.mysql.commit()
         return len(founders)
 
-    def update_title(self, name, title):
-        query = f'UPDATE li_profiles SET Title="{title}", Checked=0 WHERE Name="{name}"'
+    def update_record(self, name, title, linkedin):
+        query = f'UPDATE SET Name="{name}", Title="{title}", Checked=0 WHERE LinkedIn LIKE "{linkedin}%"'
         self.cursor.execute(query)
         self.mysql.commit()
 
@@ -59,3 +59,13 @@ class profiles_db:
             assignees[name] = int(records[0][0])
 
         return assignees
+    
+    def fetch_name(self, li):
+        self.cursor.execute(f'SELECT Name FROM li_profiles WHERE Linkedin LIKE "{li}%"')
+        record = self.cursor.fetchone()
+        return str(record[0])
+    
+    def fetch_title(self, li):
+        self.cursor.execute(f'SELECT Title FROM li_profiles WHERE Linkedin LIKE "{li}%"')
+        record = self.cursor.fetchone()
+        return str(record[0])

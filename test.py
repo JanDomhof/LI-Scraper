@@ -11,5 +11,4 @@ from dotenv import load_dotenv
 load_dotenv()
 
 
-a = [['==', '==', '==', '=='],['test', 4, 5, 6]]
-print(a[-1][1:])
+print(not False)

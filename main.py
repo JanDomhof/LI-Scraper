@@ -1,6 +1,6 @@
 """This file will run to execute all the logics and ands"""
 import undetected_chromedriver as uc
-from page import LoginPage, UNIPage
+from page import LoginPage, UNIPage, BigUNIPage
 from resources import UNI
 import os
 import numpy as np
@@ -45,44 +45,43 @@ while True:
         # UNI(name="Erasmus MC Graduate School", url="https://www.linkedin.com/company/erasmus-mc-graduate-school/people/"),
     ]
 
-    # some uni's have an option to select startyear and endyear in the filters
-    # those are made twice, once for pre-seed, once for seed
+    # some uni's result in more than 1000 profiles (which is the max load capacity on linkedin)
+    # those are BigUNI objects where we filter on segments of start and end year to find all the results.
     unis = [
-        UNI(name="TU Delft", url="https://www.linkedin.com/school/tudelft/people/"),
-        UNI(name="TU Delft | Electrical Engineering, Mathematics and Computer Science", url="https://www.linkedin.com/company/tu-delft-electrical-engineering-mathematics-and-computer-science/people/", year_option=False),
-        UNI(name="TU Delft | Applied Sciences", url="https://www.linkedin.com/company/tu-delft-applied-sciences/people/", year_option=False),
-        UNI(name="TU Delft | Aerospace Engineering", url="https://www.linkedin.com/company/tu-delft-aerospace-engineering/people/", year_option=False),
-        UNI(name="TU Delft | Civil Engineering and Geosciences", url="https://www.linkedin.com/school/tu-delft-civil-engineering-geosciences/people/"),
-        UNI(name="TU Delft | Mechanical Engineering", url="https://www.linkedin.com/school/tu-delft-mechanical-engineering/people/"),
-        UNI(name="TU Delft | Technology, Policy and Management", url="https://www.linkedin.com/school/tu-delft-technology-policy-and-management/people/"),
-        UNI(name="TU Delft | Industrial Design Engineering", url="https://www.linkedin.com/school/idetudelft/people/"),
-        UNI(name="Erasmus University", url="https://www.linkedin.com/school/erasmus-university-rotterdam/people/"),
-        UNI(name="Erasmus School of Accounting & Assurance", url="https://www.linkedin.com/school/erasmus-school-of-accounting-assurance-registercontroller/people/"),
-        UNI(name="Erasmus School of Philosophy", url="https://www.linkedin.com/company/erasmus-school-of-philosophy/people/", year_option=False),
-        UNI(name="Erasmus School of History, Culture and Communication", url="https://www.linkedin.com/school/erasmus-school-of-history-culture-and-communication-eshcc/people/"),
-        UNI(name="Erasmus School of Social and Behavioural Sciences", url="https://www.linkedin.com/school/erasmus-school-of-social-and-behavioural-sciences-essb/people/"),
-        UNI(name="Erasmus School of Health Policy & Management", url="https://www.linkedin.com/company/erasmus-school-of-health-policy-&-management/people/", year_option=False), 
-        UNI(name="Erasmus School of Law", url="https://www.linkedin.com/school/erasmus-school-of-law/people/"),
-        UNI(name="Erasmus School of Economics", url="https://www.linkedin.com/school/erasmus-school-of-economics/people/"),
-        UNI(name="Erasmus Rotterdam School of Management", url="https://www.linkedin.com/school/rotterdam-school-of-management-erasmus-university/people/"),
+        UNI(name="TU Delft", url="https://www.linkedin.com/school/tudelft/people/", big=True),
+        # UNI(name="TU Delft | Electrical Engineering, Mathematics and Computer Science", url="https://www.linkedin.com/company/tu-delft-electrical-engineering-mathematics-and-computer-science/people/"),
+        # UNI(name="TU Delft | Applied Sciences", url="https://www.linkedin.com/company/tu-delft-applied-sciences/people/"),
+        # UNI(name="TU Delft | Aerospace Engineering", url="https://www.linkedin.com/company/tu-delft-aerospace-engineering/people/"),
+        # UNI(name="TU Delft | Civil Engineering and Geosciences", url="https://www.linkedin.com/school/tu-delft-civil-engineering-geosciences/people/", big=True),
+        # UNI(name="TU Delft | Mechanical Engineering", url="https://www.linkedin.com/school/tu-delft-mechanical-engineering/people/", big=True),
+        # UNI(name="TU Delft | Technology, Policy and Management", url="https://www.linkedin.com/school/tu-delft-technology-policy-and-management/people/", big=True),
+        # UNI(name="TU Delft | Industrial Design Engineering", url="https://www.linkedin.com/school/idetudelft/people/", big=True),
+        # UNI(name="Erasmus University", url="https://www.linkedin.com/school/erasmus-university-rotterdam/people/", big=True),
+        # UNI(name="Erasmus School of Accounting & Assurance", url="https://www.linkedin.com/school/erasmus-school-of-accounting-assurance-registercontroller/people/", big=True),
+        # UNI(name="Erasmus School of Philosophy", url="https://www.linkedin.com/company/erasmus-school-of-philosophy/people/"),
+        # UNI(name="Erasmus School of History, Culture and Communication", url="https://www.linkedin.com/school/erasmus-school-of-history-culture-and-communication-eshcc/people/", big=True),
+        # UNI(name="Erasmus School of Social and Behavioural Sciences", url="https://www.linkedin.com/school/erasmus-school-of-social-and-behavioural-sciences-essb/people/", big=True),
+        # UNI(name="Erasmus School of Health Policy & Management", url="https://www.linkedin.com/company/erasmus-school-of-health-policy-&-management/people/"), 
+        # UNI(name="Erasmus School of Law", url="https://www.linkedin.com/school/erasmus-school-of-law/people/", big=True),
+        # UNI(name="Erasmus School of Economics", url="https://www.linkedin.com/school/erasmus-school-of-economics/people/", big=True),
+        # UNI(name="Erasmus Rotterdam School of Management", url="https://www.linkedin.com/school/rotterdam-school-of-management-erasmus-university/people/", big=True),
     ]
 
     """
     STEP 3: SCRAPE!!!
     """
     for u in unis:
-        uni_pages = []
-        uni_pages.append(UNIPage(driver=driver, pre_seed=True, url=u.url, name=u.name))
-        if u.year_option:
-            uni_pages.append(UNIPage(driver=driver, pre_seed=False, url=u.url, name=u.name))
+        if u.big:
+            uni_page = BigUNIPage(driver=driver, pre_seed=True, url=u.url, name=u.name)
+        else:
+            uni_page = UNIPage(driver=driver, pre_seed=True, url=u.url, name=u.name)
 
-        try:
-            for up in uni_pages:
-                up.scrape()
-                up.close()
+        uni_page.scrape()
+        uni_page.close()
+        # try:
                 
-        except Exception as e:
-            print(f"Error with scraper for {u.uni}:\n{e}")
+        # except Exception as e:
+        #     print(f"Error with scraper for {u.name}:\n{e}")
 
     """
     STEP 4: Close driver
