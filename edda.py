@@ -8,8 +8,8 @@ class Edda:
     def __init__(self):
         self.url = "https://eu-dealflow.edda.co"
         payload = {
-                "email": os.environ["EDDA_USERNAME"],
-                "password": os.environ["EDDA_PASSWORD"]
+            "email": os.environ["EDDA_USERNAME"],
+            "password": os.environ["EDDA_PASSWORD"]
         }
         endpoint = "/api/v2/auth/login"
         response = self.post(self.url + endpoint, payload)

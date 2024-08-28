@@ -47,7 +47,7 @@ class profiles_db:
         return len(founders)
 
     def update_record(self, name, title, linkedin):
-        query = f'UPDATE SET Name="{name}", Title="{title}", Checked=0 WHERE LinkedIn LIKE "{linkedin}%"'
+        query = f'UPDATE li_profiles SET Name="{name}", Title="{title}", Checked=0 WHERE LinkedIn LIKE "{linkedin}%"'
         self.cursor.execute(query)
         self.mysql.commit()
 
