@@ -350,8 +350,8 @@ class UNIPage (BasePage):
             self.reports.append(
                 [
                     url.split('=')[-1] if "=" in url else "No filter used", # keyword
-                    url.split('=')[2][0:4], # start year
-                    url.split('=')[1][0:4], # end year
+                    url.split('=')[2][0:4] if "=" in url else "---", # start year
+                    url.split('=')[1][0:4] if "=" in url else "---", # end year
                     member_count,
                     batch_total,
                     batch_new,
@@ -383,11 +383,11 @@ class UNIPage (BasePage):
         # turn report into numpy array and delete the first 'string' column, and take the sums
         report_table = self.reports.copy()
         table = np.array(report_table)
-        int_table = np.delete(table, [0], axis=1).astype(int)
+        int_table = np.delete(table, [0, 1, 2], axis=1).astype(int)
         sums = np.sum(int_table, axis=0)
         
         # create new row for total scores and add the column sums
-        total_row = ['TOTAL']
+        total_row = ['TOTAL', '', '']
         total_row.extend(sums)
 
         # add a row that indicates a seperation and then the TOTAL row
@@ -411,6 +411,7 @@ class BigUNIPage (UNIPage):
     # 2nd: we filter on start and end year to find segments that do not result in more than 1000 results (since that is the limit that linkedin shows on the page)
     def create_urls(self, use_filters=True):
         titles = ['founder', 'cto', 'cfo', 'ceo', 'oprichter', 'eigenaar', 'cso', 'co-founder', 'entrepreneur', 'chief', 'officer', 'builder', 'building']
+        titles = ['founder', 'co-founder']
         base_url = self.url if self.url[-1] == '/' else self.url + '/'
         
         year_segments = [1980, 1985, 1989, 1992, 1995, 1998, 2001, 2004, 2007, 2010, 2013, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025]

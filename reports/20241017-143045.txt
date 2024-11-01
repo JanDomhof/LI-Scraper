@@ -1,0 +1,19 @@
+LinkedIn scraper report!Timestamp: Thu Oct 17 14:30:45 2024
+
+|                                                                     |       | University Page Name   | Count on page   | Profiles found   | New   | New title   | Old   | Error   |   Outside connection range |   Scrolls |
+|---------------------------------------------------------------------+-------+------------------------+-----------------+------------------+-------+-------------+-------+---------+----------------------------+-----------|
+| TU Delft | Electrical Engineering, Mathematics and Computer Science |       |                        | 90              | 60               | 0     | 0           | 60    | 0       |                          0 |         0 |
+| --- +                                                               | --- + | --- +                  | --- +           | --- +            | --- + | --- +       | --- + | --- +   |                            |           |
+| TOTAL                                                               | 90    | 60                     | 0               | 0                | 60    | 0           | 0     | 0       |                            |           |
+
+
+Below is a report for every UNI page:
+
+Scraper Report for Page: TU Delft | Electrical Engineering, Mathematics and Computer Science
+
+| Keyword        | Start Year   | End Year   | Count on page   | Profiles found   | New   | New title   | Old   | Error   | Outside connection range   | Scrolls   |
+|----------------+--------------+------------+-----------------+------------------+-------+-------------+-------+---------+----------------------------+-----------|
+| No filter used | ---          | ---        | 90              | 60               | 0     | 0           | 60    | 0       | 0                          | 0         |
+| --- +          | --- +        | --- +      | --- +           | --- +            | --- + | --- +       | --- + | --- +   | --- +                      | --- +     |
+| TOTAL          |              |            | 90              | 60               | 0     | 0           | 60    | 0       | 0                          | 0         |
+
